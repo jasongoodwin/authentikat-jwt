@@ -1,66 +1,78 @@
 package authentikat
 
-import java.util.Date
+import java.util.{TimeZone, Date}
+import spray.json._
+import java.text.SimpleDateFormat
 
-case class JsonWebTokenUnencoded(header: JwtHeader, claims: JwtClaimsSet)
+package object jwt {
 
-object JsonWebToken {
-  val base64Encoder = new sun.misc.BASE64Encoder
-  val base64Decoder = new sun.misc.BASE64Decoder
+  object JsonWebToken {
+    private val base64Encoder = new sun.misc.BASE64Encoder
+    private val base64Decoder = new sun.misc.BASE64Decoder
 
-  def apply(header: JwtHeader, claims: JwtClaimsSet) = {
-
+    def apply(header: JwtHeader, claims: JwtClaimsSet): String = {
+      base64Encoder.encode(header.asJsonString.getBytes("UTF-8"))
+    }
   }
-}
 
-/**
- * JWT/JWS Header.
- * @param algorithm
- * @param mimeType
- */
+  case class JwtHeader(algorithm: String = null,
+                       mimeType: String = null,
+                       contentType: String = "JWT") {
 
-case class JwtHeader(algorithm: String = null,
-                      mimeType: String = null) {
-  val contentType = "JWT"
-}
+    private case class JwtHeader(alg: Option[String], typ: Option[String], cty: Option[String]= Some("JWT"))
 
-object JwtHeader {
-  object Keys {
-    val contentType = "cty"
-    val algorithm = "alg"
-    val mimeType = "typ"
+    def asJsonString: String = {
+      import DefaultJsonProtocol._
+      implicit val jsonFormat = jsonFormat3(JwtHeader)
+
+      val header = JwtHeader(Option(algorithm), Option(mimeType))
+      header.toJson.toString
+    }
   }
-}
 
-/**
- * JWT Claims
- * @param privateClaims Any extra fields can be stored in here. Eg userName, userId for a user
- * @param issuer
- * @param subject
- * @param audience
- * @param expirationTime
- * @param notBefore
- * @param issuedAt
- * @param jwtId
- */
+  type JwtPrivateClaimsSet = scala.collection.immutable.Map[String, String]
 
-case class JwtClaimsSet(privateClaims: Map[String, String] = Map.empty[String, String],
-                        issuer: Option[String],
-                        subject: Option[String],
-                        audience: Option[String],
-                        expirationTime: Option[Date],
-                        notBefore: Option[Date],
-                        issuedAt: Option[Date],
-                        jwtId: Option[String])
+  private case class JwtPublicClaimsSet(iss: Option[String],
+                                        sub: Option[String],
+                                        aud: Option[String],
+                                        exp: Option[String],
+                                        nbf: Option[String],
+                                        iat: Option[String],
+                                        jti: Option[String])
 
-object JwtClaimsSet {
-  object Keys {
-    val issuerKey = "iss"
-    val subjectKey = "sub"
-    val audienceKey = "aud"
-    val expirationTimeKey = "exp"
-    val nodBeforeKey = "nfb"
-    val issuedAt = "iat"
-    val jwtId = "jti"
+
+  case class JwtClaimsSet(privateClaims: JwtPrivateClaimsSet,
+                          issuer: String = null,
+                          subject: String = null,
+                          audience: String = null,
+                          expirationTime: Date = null,
+                          notBefore: Date = null,
+                          issuedAt: Date = null,
+                          jwtId: String = null) {
+
+
+    private val publicClaims = new JwtPublicClaimsSet(
+      Option(issuer),
+      Option(subject),
+      Option(audience),
+      Option(expirationTime).map{x => JwtClaimsSet.dateFormat.format(x)},
+      Option(notBefore).map{x => JwtClaimsSet.dateFormat.format(x)},
+      Option(issuedAt).map{x => JwtClaimsSet.dateFormat.format(x)},
+      Option(jwtId))
+
+    def asJsonString: String = {
+      import DefaultJsonProtocol._
+      implicit val jsonFormat = jsonFormat7(JwtPublicClaimsSet)
+
+      val pc = privateClaims.toJson
+      JsObject(pc.asJsObject.fields ++ publicClaims.toJson.asJsObject.fields).toString
+    }
   }
+
+  object JwtClaimsSet {
+    private val dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+  }
+
 }
+

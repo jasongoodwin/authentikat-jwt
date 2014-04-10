@@ -5,9 +5,7 @@ class JwtServiceSpec extends FunSpec with ShouldMatchers{
 
   describe("JwtEncode") {
     it("should fail on invalid input") {
-//      intercept[IllegalArgumentException]{
-//        JwtEncode("bad input", PlainText)
-//      }
+
     }
   }
 

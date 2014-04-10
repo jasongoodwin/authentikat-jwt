@@ -8,7 +8,7 @@ import smoke.test._
 
 class AppSpec extends FunSpec with BeforeAndAfterAll {
 
-  val app = new Authenticat
+  val app = new Authentikat
 
   override def afterAll { app.shutdown() }
 

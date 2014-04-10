@@ -1,12 +1,12 @@
 import com.typesafe.config.ConfigFactory
 import smoke._
 
-object AuthenticatApp extends App {
-  val smoke = new Authenticat
+object AuthentikatApp extends App {
+  val smoke = new Authentikat
 
 }
 
-class Authenticat extends Smoke with StaticAssets {
+class Authentikat extends Smoke with StaticAssets {
 
   override val smokeConfig = ConfigFactory.load().getConfig("smoke")
   override val executionContext = scala.concurrent.ExecutionContext.global
