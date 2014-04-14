@@ -10,8 +10,11 @@ package object jwt {
     private val base64Encoder = new sun.misc.BASE64Encoder
     private val base64Decoder = new sun.misc.BASE64Decoder
 
-    def apply(header: JwtHeader, claims: JwtClaimsSet): String = {
-      base64Encoder.encode(header.asJsonString.getBytes("UTF-8"))
+    def apply(header: JwtHeader, claims: JwtClaimsSet, algorithm: String, key: String): String = {
+      val encodedHeader = base64Encoder.encode(header.asJsonString.getBytes("UTF-8"))
+      val encodedClaims = base64Encoder.encode(claims.asJsonString.getBytes("UTF-8"))
+      val encryptedClaims = JsonWebSignature(algorithm, encodedClaims, key).toString
+      Seq(encodedHeader, encodedClaims, encryptedClaims).mkString(".")
     }
   }
 
@@ -66,6 +69,10 @@ package object jwt {
 
       val pc = privateClaims.toJson
       JsObject(pc.asJsObject.fields ++ publicClaims.toJson.asJsObject.fields).toString
+    }
+
+    def asBase64EncodedJson: String = {
+      this.asJsonString
     }
   }
 

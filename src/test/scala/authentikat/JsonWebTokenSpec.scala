@@ -9,8 +9,12 @@ import java.text.SimpleDateFormat
 class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
 
   describe("JsonWebToken") {
-    it("should have three parts") {
+    val header = jwt.JwtHeader("hai")
+    val claims = jwt.JwtClaimsSet(Map("Hey" -> "foo"), "me")
 
+    it("should have three parts") {
+      val result = JsonWebToken.apply(header, claims, "HS256", "secretkey")
+      println(result)
     }
   }
 
