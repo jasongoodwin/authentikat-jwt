@@ -12,6 +12,7 @@ class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
 
     it("should have three parts") {
       val result = JsonWebToken.apply(header, claims, "HS256", "secretkey")
+      result.split("\\.").length should equal(3)
     }
   }
 
