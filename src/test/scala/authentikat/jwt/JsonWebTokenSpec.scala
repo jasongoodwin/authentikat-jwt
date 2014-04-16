@@ -2,17 +2,28 @@ package authentikat.jwt
 
 import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
-import authentikat.jwt
 
 class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
 
   describe("JsonWebToken") {
-    val header = jwt.JwtHeader("hai")
-    val claims = jwt.JwtClaimsSet(Map("Hey" -> "foo"))
+    val header = JwtHeader("hai")
+    val claims = JwtClaimsSet(Map("Hey" -> "foo"))
 
     it("should have three parts") {
       val result = JsonWebToken.apply(header, claims, "HS256", "secretkey")
       result.split("\\.").length should equal(3)
+    }
+
+    it("should be extracted by extractor") {
+      val jwt = JsonWebToken.apply(header, claims, "HS256", "secretkey")
+      val result = jwt match {
+        case JsonWebToken(x,y,z) =>
+          true
+        case _ =>
+          false
+      }
+
+      result should equal(true)
     }
   }
 

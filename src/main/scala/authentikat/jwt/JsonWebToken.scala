@@ -20,5 +20,9 @@ object JsonWebToken {
     Seq(encodedHeader, encodedClaims, encryptedClaims).mkString(".")
   }
 
+  def unapply(jwt: String): Option[(JwtHeader, JwtClaimsSet, String)] = {
+    None
+  }
+
 }
 
