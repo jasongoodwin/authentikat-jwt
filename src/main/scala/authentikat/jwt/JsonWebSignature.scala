@@ -1,7 +1,7 @@
-package authentikat
+package authentikat.jwt
 
 import javax.crypto.spec.SecretKeySpec
-  import javax.crypto.Mac
+import javax.crypto.Mac
 
 /**
  * Json Web Algorithms for Encrypting JWS.

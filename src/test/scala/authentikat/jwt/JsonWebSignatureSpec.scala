@@ -1,5 +1,6 @@
-import authentikat.JsonWebSignature
-import authentikat.JsonWebSignature._
+package authentikat.jwt
+
+import JsonWebSignature._
 import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
 
