@@ -1,11 +1,10 @@
 authentikat-jwt
 ===============
 
-Authentikat JWT is a JSON Web Token Draft Implementation for Scala.
-At the time of writing, it is incomplete.
-I suspect it will be in usable state end of April, 2013.
-It will be part of a larger security solution (planned name is Authentikat) that can be used as an authentication server
-in a distributed application environment.
+Authentikat-jwt is a JSON Web Token draft implementation for Scala.
+It is in a usable state but should be considered experimental with no stability in the API. 
+I suspect it will be in stable state (eg 1.0.0) end of April, 2014.
+It will be part of a larger security solution (planned name is Authentikat) that can be used as an authentication server in a distributed application environment.
 
 Motivations
 -----------
