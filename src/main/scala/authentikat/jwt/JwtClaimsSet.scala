@@ -1,8 +1,8 @@
 package authentikat.jwt
 
 import spray.json._
-import java.text.SimpleDateFormat
-import java.util.TimeZone
+
+//TODO needs to handle data types for eg iso-8601 date formatting (see commit history). Recommend type classes with implicit conversions
 
 case class JwtClaimsSet(claims: Map[String, String]) {
 
@@ -15,12 +15,3 @@ case class JwtClaimsSet(claims: Map[String, String]) {
     this.asJsonString
   }
 }
-
-/**
- * Should be used for dates.
- */
-object JwtClaimsSet {
-  private val dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-  dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
-}
-

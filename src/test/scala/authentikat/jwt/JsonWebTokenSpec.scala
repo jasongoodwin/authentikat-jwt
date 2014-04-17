@@ -6,7 +6,7 @@ import org.scalatest.matchers.ShouldMatchers
 class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
 
   describe("JsonWebToken") {
-    val header = JwtHeader("hai")
+    val header = JwtHeader(Some("hai"))
     val claims = JwtClaimsSet(Map("Hey" -> "foo"))
 
     it("should have three parts") {
@@ -19,7 +19,8 @@ class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
       val result = jwt match {
         case JsonWebToken(x,y,z) =>
           true
-        case _ =>
+        case x =>
+          println(x)
           false
       }
 
@@ -29,7 +30,7 @@ class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
 
   describe("JwtHeader") {
     it("should render to json as per spec") {
-      val header = JwtHeader("algorithm", "mimeType")
+      val header = JwtHeader(Some("algorithm"), Some("mimeType"))
       val expectedJson = "{\"alg\":\"algorithm\",\"typ\":\"mimeType\",\"cty\":\"JWT\"}"
 
       header.asJsonString should equal(expectedJson)
