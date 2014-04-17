@@ -6,25 +6,33 @@ import org.scalatest.matchers.ShouldMatchers
 class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
 
   describe("JsonWebToken") {
-    val header = JwtHeader(Some("hai"))
+    val header = JwtHeader(Some("HS256"))
     val claims = JwtClaimsSet(Map("Hey" -> "foo"))
 
     it("should have three parts") {
-      val result = JsonWebToken.apply(header, claims, "HS256", "secretkey")
+      val result = JsonWebToken.apply(header, claims, "secretkey")
       result.split("\\.").length should equal(3)
     }
 
     it("should be extracted by extractor") {
-      val jwt = JsonWebToken.apply(header, claims, "HS256", "secretkey")
+      val jwt = JsonWebToken.apply(header, claims, "secretkey")
       val result = jwt match {
         case JsonWebToken(x,y,z) =>
           true
         case x =>
-          println(x)
           false
       }
-
       result should equal(true)
+    }
+
+    it("should validate a token successfully if same key is used") {
+      val jwt = JsonWebToken.apply(header, claims, "secretkey")
+      JsonWebToken.validate(jwt, "secretkey") should equal(true)
+    }
+
+    it("should fail to validate a token if different key is used") {
+      val jwt = JsonWebToken.apply(header, claims, "secretkey")
+      JsonWebToken.validate(jwt, "here be dragons") should equal(false)
     }
   }
 

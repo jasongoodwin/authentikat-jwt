@@ -33,6 +33,7 @@ object JsonWebSignature {
 
   private case object HmacSha {
     def apply(algorithm: String, data: String, key: String): Array[Byte] = {
+
       val _key = Option(key).getOrElse(throw new IllegalArgumentException("Missing key for JWT encryption via " + algorithm))
       val mac: Mac = Mac.getInstance(algorithm)
       val secretKey: SecretKeySpec = new SecretKeySpec(_key.getBytes, algorithm)
