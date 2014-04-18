@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat
 class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
 
   describe("JsonWebToken") {
-    val header = JwtHeader(Some("HS256"))
+    val header = JwtHeader("HS256")
     val claims = JwtClaimsSet(Map("Hey" -> "foo"))
 
     it("should have three parts") {
@@ -40,7 +40,7 @@ class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
 
   describe("JwtHeader") {
     it("should render to json as per spec") {
-      val header = JwtHeader(Some("algorithm"), Some("mimeType"))
+      val header = JwtHeader("algorithm", "mimeType")
       val expectedJson = "{\"alg\":\"algorithm\",\"typ\":\"mimeType\",\"cty\":\"JWT\"}"
 
       header.asJsonString should equal(expectedJson)

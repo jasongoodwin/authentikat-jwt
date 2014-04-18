@@ -5,6 +5,11 @@ import java.text.SimpleDateFormat
 
 object JsonSerializer {
 
+  /**
+   * Simple flat json StringBuilder based serializer.
+   * @param fields key value pairs
+   * @return json string
+   */
   def apply(fields: Seq[(String, Any)]) = {
     "{" +
       fields.collect {
@@ -23,5 +28,4 @@ object JsonSerializer {
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
     dateFormat.format(date)
   }
-
 }

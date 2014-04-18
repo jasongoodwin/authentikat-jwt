@@ -1,13 +1,13 @@
 package authentikat.jwt
 
-import scala.Some
 import authentikat.json.JsonSerializer
 
-//TODO there should by an apply method in companion object to allow nulls to be used instead of Option on created. Breaks spray-json. Need to get off of Spray json and onto something faster anyways.
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
 
-case class JwtHeader(alg: Option[String] = None,
-                     typ: Option[String] = None,
-                     cty: Option[String] = Some("JWT")) {
+case class JwtHeader(alg: Option[String],
+                     typ: Option[String],
+                     cty: Option[String]) {
 
   def asJsonString: String = {
     val toSerialize =
@@ -18,3 +18,26 @@ case class JwtHeader(alg: Option[String] = None,
     JsonSerializer(toSerialize)
   }
 }
+
+object JwtHeader {
+  import org.json4s.DefaultFormats
+  implicit val formats = DefaultFormats
+
+  def apply(alg: String = null, typ: String = null, cty: String = "JWT"): JwtHeader = {
+    JwtHeader(Option(alg), Option(typ), Option(cty))
+  }
+
+  def fromJsonString(jsonString: String): JwtHeader = {
+    val ast = parse(jsonString)
+
+    val alg = (ast \ "alg").extract[Option[String]]
+    val typ = (ast \ "typ").extract[Option[String]]
+    val cty = (ast \ "cty").extract[Option[String]]
+
+    JwtHeader(alg, typ, Option(cty.getOrElse("JWT")))
+  }
+}
+
+//object JwtHeader {
+
+//}

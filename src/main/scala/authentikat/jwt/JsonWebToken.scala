@@ -1,11 +1,10 @@
 package authentikat.jwt
 
-import spray.json._
-import spray.json.DefaultJsonProtocol._
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
 
 object JsonWebToken {
 
-  private implicit val jsonFormat = jsonFormat3(JwtHeader)
   private val base64Encoder = new sun.misc.BASE64Encoder
   private val base64Decoder = new sun.misc.BASE64Decoder
 
@@ -30,8 +29,14 @@ object JsonWebToken {
 
     sections.length match {
       case 3 =>
-        val header = new String(base64Decoder.decodeBuffer(sections(0)), "UTF-8").asJson.convertTo[JwtHeader]
-        val claims = JwtClaimsSet(new String(base64Decoder.decodeBuffer(sections(1)), "UTF-8").asJson.convertTo[Map[String, String]])
+        import org.json4s.DefaultFormats
+        implicit val formats = DefaultFormats
+
+
+        val headerJsonString = new String(base64Decoder.decodeBuffer(sections(0)), "UTF-8")
+        val header = JwtHeader.fromJsonString(headerJsonString)
+
+        val claims = JwtClaimsSet(parse(new String(base64Decoder.decodeBuffer(sections(1)), "UTF-8")).extract[Map[String, String]])
         val signature = sections(2)
 
         Some(header, claims, signature)
@@ -41,8 +46,15 @@ object JsonWebToken {
   }
 
   def validate(jwt: String, key: String): Boolean = {
+
+    import org.json4s.DefaultFormats
+    implicit val formats = DefaultFormats
+
     val sections = jwt.split("\\.")
-    val header = new String(base64Decoder.decodeBuffer(sections(0)), "UTF-8").asJson.convertTo[JwtHeader]
+
+    val headerJsonString = new String(base64Decoder.decodeBuffer(sections(0)), "UTF-8")
+    val header = JwtHeader.fromJsonString(headerJsonString)
+
     val encryptedClaims = base64Encoder.encode(JsonWebSignature(header.alg.getOrElse("none"), sections(1), key))
 
     sections(2) == encryptedClaims
