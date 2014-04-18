@@ -12,8 +12,6 @@ libraryDependencies ++= Seq(
   "com.mdialog" %% "smoke" % "2.0.1",
   "commons-codec" % "commons-codec" % "1.9",
   "io.spray" %%  "spray-json" % "1.2.5",
-  "joda-time" % "joda-time" % "2.3",
-  "org.joda" % "joda-convert" % "1.6",
   "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 )
 

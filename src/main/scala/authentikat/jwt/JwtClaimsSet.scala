@@ -1,14 +1,11 @@
 package authentikat.jwt
 
-import spray.json._
+import authentikat.json.JsonSerializer
 
-//TODO needs to handle data types for eg iso-8601 date formatting (see commit history). Recommend type classes with implicit conversions
-
-case class JwtClaimsSet(claims: Map[String, String]) {
+case class JwtClaimsSet(claims: Map[String, Any]) {
 
   def asJsonString: String = {
-    import DefaultJsonProtocol._
-    claims.toJson.compactPrint
+    JsonSerializer(claims.map(x => (x._1, x._2)).toSeq)
   }
 
   def asBase64EncodedJson: String = {
