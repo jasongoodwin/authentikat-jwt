@@ -12,5 +12,8 @@ case class JwtHeader(alg: Option[String] = None,
   def asJsonString: String = {
     implicit val jsonFormat = jsonFormat3(JwtHeader)
     this.toJson.toString
+
   }
+
+
 }
