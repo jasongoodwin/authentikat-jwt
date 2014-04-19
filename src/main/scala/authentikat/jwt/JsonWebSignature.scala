@@ -5,8 +5,9 @@ import javax.crypto.Mac
 
 /**
  * Json Web Algorithms for Encrypting JWS.
- * These generate a one way hash with a secret to be verified on the receiving end by hashing the same data and secret.
- * http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-25#section-4.1
+ * These generate a one way hash (of claims) with a secret key.
+ * Note there is an incomplete set of hashing implementations here.
+ * http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-25
  */
 
 object JsonWebSignature {
@@ -23,11 +24,11 @@ object JsonWebSignature {
 
   def apply(algorithm: Algorithm, data: String, key: String = null): Array[Byte] = {
     algorithm match {
-    case HS256 => HmacSha("HmacSHA256", data, key)
-    case HS384 => HmacSha("HmacSHA384", data, key)
-    case HS512 => HmacSha("HmacSHA512", data, key)
-    case none => Array.empty[Byte]
-    case x => throw new UnsupportedOperationException(x + " is an unknown or unimplemented JWT algo key")
+      case HS256 => HmacSha("HmacSHA256", data, key)
+      case HS384 => HmacSha("HmacSHA384", data, key)
+      case HS512 => HmacSha("HmacSHA512", data, key)
+      case none => Array.empty[Byte]
+      case x => throw new UnsupportedOperationException(x + " is an unknown or unimplemented JWT algo key")
     }
   }
 
@@ -45,19 +46,22 @@ object JsonWebSignature {
   abstract class Algorithm
 
   case object none extends Algorithm
+
   case object HS256 extends Algorithm
+
   case object HS384 extends Algorithm
+
   case object HS512 extends Algorithm
 
-//  private sealed abstract class UnimplementedAlgorithm extends Algorithm
-//  private case object RS256 extends UnimplementedAlgorithm //Recommended implementation
-//  private case object RS384 extends UnimplementedAlgorithm
-//  private case object RS512 extends UnimplementedAlgorithm
-//  private case object ES256 extends UnimplementedAlgorithm //Recommended+ implementation
-//  private case object ES384 extends UnimplementedAlgorithm
-//  private case object ES512 extends UnimplementedAlgorithm
-//  private case object PS256 extends UnimplementedAlgorithm
-//  private case object PS384 extends UnimplementedAlgorithm
-//  private case object PS512 extends UnimplementedAlgorithm
+  //  private sealed abstract class UnimplementedAlgorithm extends Algorithm
+  //  private case object RS256 extends UnimplementedAlgorithm //Recommended implementation
+  //  private case object RS384 extends UnimplementedAlgorithm
+  //  private case object RS512 extends UnimplementedAlgorithm
+  //  private case object ES256 extends UnimplementedAlgorithm //Recommended+ implementation
+  //  private case object ES384 extends UnimplementedAlgorithm
+  //  private case object ES512 extends UnimplementedAlgorithm
+  //  private case object PS256 extends UnimplementedAlgorithm
+  //  private case object PS384 extends UnimplementedAlgorithm
+  //  private case object PS512 extends UnimplementedAlgorithm
 }
 

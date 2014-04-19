@@ -5,7 +5,7 @@ import org.scalatest.matchers.ShouldMatchers
 import java.util.{Date, TimeZone}
 import java.text.SimpleDateFormat
 
-class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
+class JsonWebTokenSpec extends FunSpec with ShouldMatchers {
 
   describe("JsonWebToken") {
     val header = JwtHeader("HS256")
@@ -19,7 +19,7 @@ class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
     it("should be extracted by extractor") {
       val jwt = JsonWebToken.apply(header, claims, "secretkey")
       val result = jwt match {
-        case JsonWebToken(x,y,z) =>
+        case JsonWebToken(x, y, z) =>
           true
         case x =>
           false
@@ -53,7 +53,7 @@ class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
     val dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
     val dateIso8601 = dateFormat.format(date)
-    
+
     val claimsSet = JwtClaimsSet(Map("privateClaim" -> "foo", "iss" -> "Issuer", "exp" -> date))
     val claimsSetJsonString = claimsSet.asJsonString
 
@@ -66,7 +66,7 @@ class JsonWebTokenSpec  extends FunSpec with ShouldMatchers {
     }
 
     it("should contain exp (Expiration time) claim as ISO8601 date") {
-      claimsSetJsonString should include("\"exp\":\""+dateIso8601+"\"")
+      claimsSetJsonString should include("\"exp\":\"" + dateIso8601 + "\"")
     }
   }
 }

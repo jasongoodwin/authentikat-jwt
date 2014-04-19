@@ -24,6 +24,12 @@ object JsonWebToken {
     Seq(encodedHeader, encodedClaims, encryptedClaims).mkString(".")
   }
 
+  /**
+   * Extractor method
+   * @param jwt
+   * @return
+   */
+
   def unapply(jwt: String): Option[(JwtHeader, JwtClaimsSet, String)] = {
     val sections = jwt.split("\\.")
 
@@ -32,11 +38,12 @@ object JsonWebToken {
         import org.json4s.DefaultFormats
         implicit val formats = DefaultFormats
 
-
         val headerJsonString = new String(base64Decoder.decodeBuffer(sections(0)), "UTF-8")
         val header = JwtHeader.fromJsonString(headerJsonString)
 
-        val claims = JwtClaimsSet(parse(new String(base64Decoder.decodeBuffer(sections(1)), "UTF-8")).extract[Map[String, String]])
+        val claimsMap = parse(new String(base64Decoder.decodeBuffer(sections(1)), "UTF-8")).extract[Map[String, String]]
+        val claims = JwtClaimsSet(claimsMap)
+
         val signature = sections(2)
 
         Some(header, claims, signature)
@@ -44,6 +51,15 @@ object JsonWebToken {
         None
     }
   }
+
+  /**
+   * Validate a JWT claims set against a secret key.
+   * Validates an un-parsed jwt as parsing it before validating it is probably un-necessary.
+   * Note this does NOT validate exp or other validation claims - it only validates the claims against the hash.
+   * @param jwt
+   * @param key
+   * @return
+   */
 
   def validate(jwt: String, key: String): Boolean = {
 

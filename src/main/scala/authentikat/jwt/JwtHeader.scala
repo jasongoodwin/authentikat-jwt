@@ -12,15 +12,17 @@ case class JwtHeader(alg: Option[String],
   def asJsonString: String = {
     val toSerialize =
       alg.map(x => ("alg", x)).toSeq ++
-      typ.map(x => ("typ", x)).toSeq ++
-      cty.map(x => ("cty", x))
+        typ.map(x => ("typ", x)).toSeq ++
+        cty.map(x => ("cty", x))
 
     JsonSerializer(toSerialize)
   }
 }
 
 object JwtHeader {
+
   import org.json4s.DefaultFormats
+
   implicit val formats = DefaultFormats
 
   def apply(alg: String = null, typ: String = null, cty: String = "JWT"): JwtHeader = {
@@ -37,7 +39,3 @@ object JwtHeader {
     JwtHeader(alg, typ, Option(cty.getOrElse("JWT")))
   }
 }
-
-//object JwtHeader {
-
-//}
