@@ -40,8 +40,8 @@ class JsonWebTokenSpec extends FunSpec with ShouldMatchers {
 
   describe("JwtHeader") {
     it("should render to json as per spec") {
-      val header = JwtHeader("algorithm", "mimeType")
-      val expectedJson = "{\"alg\":\"algorithm\",\"typ\":\"mimeType\",\"cty\":\"JWT\"}"
+      val header = JwtHeader("algorithm", "contentType")
+      val expectedJson = "{\"alg\":\"algorithm\",\"cty\":\"contentType\",\"typ\":\"JWT\"}"
 
       header.asJsonString should equal(expectedJson)
     }

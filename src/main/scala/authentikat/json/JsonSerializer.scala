@@ -17,7 +17,7 @@ object JsonSerializer {
           "\"" + key + "\":" + value
         case (key: String, value: Date) =>
           "\"" + key + "\":" + "\"" + formatDateIso8601(value) + "\""
-        case (key: String, value: Any) =>
+        case (key: String, value: String) =>
           "\"" + key + "\":" + "\"" + value + "\""
       }.mkString(",") +
       "}"
@@ -28,4 +28,5 @@ object JsonSerializer {
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
     dateFormat.format(date)
   }
+
 }

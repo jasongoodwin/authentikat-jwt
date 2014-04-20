@@ -1,6 +1,6 @@
 name := "authentikat-jwt"
 
-organization := "jasongoodwin"
+organization := "com.jason-goodwin"
 
 scalaVersion := "2.10.1"
 

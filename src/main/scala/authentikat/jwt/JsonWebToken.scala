@@ -4,6 +4,7 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
 object JsonWebToken {
+  import JsonWebSignature.HexToString._
 
   private val base64Encoder = new sun.misc.BASE64Encoder
   private val base64Decoder = new sun.misc.BASE64Decoder
@@ -19,9 +20,13 @@ object JsonWebToken {
   def apply(header: JwtHeader, claims: JwtClaimsSet, key: String): String = {
     val encodedHeader = base64Encoder.encode(header.asJsonString.getBytes("UTF-8"))
     val encodedClaims = base64Encoder.encode(claims.asJsonString.getBytes("UTF-8"))
-    val encryptedClaims = base64Encoder.encode(JsonWebSignature(header.alg.getOrElse("none"), encodedClaims, key))
 
-    Seq(encodedHeader, encodedClaims, encryptedClaims).mkString(".")
+    val encryptedClaims: String = JsonWebSignature(header.algorithm.getOrElse("none"), encodedClaims, key)
+
+    Seq(encodedHeader,
+      encodedClaims,
+      encryptedClaims).mkString(".")
+
   }
 
   /**
@@ -71,9 +76,9 @@ object JsonWebToken {
     val headerJsonString = new String(base64Decoder.decodeBuffer(sections(0)), "UTF-8")
     val header = JwtHeader.fromJsonString(headerJsonString)
 
-    val encryptedClaims = base64Encoder.encode(JsonWebSignature(header.alg.getOrElse("none"), sections(1), key))
+    val signature = JsonWebSignature(header.algorithm.getOrElse("none"), sections(1), key)
 
-    sections(2) == encryptedClaims
+    sections(2).contentEquals(signature)
   }
 
 }

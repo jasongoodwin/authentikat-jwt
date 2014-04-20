@@ -2,6 +2,7 @@ package authentikat.jwt
 
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.Mac
+import org.apache.commons.codec.binary.Hex
 
 /**
  * Json Web Algorithms for Encrypting JWS.
@@ -11,6 +12,12 @@ import javax.crypto.Mac
  */
 
 object JsonWebSignature {
+
+  object HexToString{
+    implicit def converter (bytes: Array[Byte]): String = {
+      Hex.encodeHexString(bytes)
+    }
+  }
 
   def apply(algorithm: String, data: String, key: String): Array[Byte] = {
     algorithm match {
