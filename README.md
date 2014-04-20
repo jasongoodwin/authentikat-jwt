@@ -2,7 +2,6 @@ authentikat-jwt
 ===============
 
 A simple scala-jwt library.
-Json is backed by the always fast Jackson with a simple native api and optional Json4s Json DSL for complex needs.
 
 Motivation
 ----------
