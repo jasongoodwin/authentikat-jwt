@@ -87,7 +87,7 @@ For now, run
 
 Then add dependency to your project:
 
-    "com.jason-goodwin" %% "authentikat-jwt" % "0.1.0"
+    "com.jason-goodwin" %% "authentikat-jwt" % "0.3.0"
 
 Creating a Token
 ----------------
