@@ -1,6 +1,6 @@
 package authentikat.jwt
 
-import authentikat.json.JsonSerializer
+import authentikat.json.SimpleJsonSerializer
 
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -15,7 +15,7 @@ case class JwtHeader(algorithm: Option[String],
         contentType.map(x => ("cty", x)).toSeq ++
         typ.map(x => ("typ", x)).toSeq
 
-    JsonSerializer(toSerialize)
+    SimpleJsonSerializer(toSerialize)
   }
 }
 

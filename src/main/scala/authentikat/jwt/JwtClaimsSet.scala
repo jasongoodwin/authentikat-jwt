@@ -1,14 +1,27 @@
 package authentikat.jwt
 
-import authentikat.json.JsonSerializer
+import authentikat.json.SimpleJsonSerializer
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
 
-case class JwtClaimsSet(claims: Map[String, Any]) {
+sealed trait JwtClaimsSet {
+  def asJsonString: String
+}
 
+case class JwtClaimsSetMap(claims: Map[String, Any]) extends JwtClaimsSet {
   def asJsonString: String = {
-    JsonSerializer(claims.map(x => (x._1, x._2)).toSeq)
+    SimpleJsonSerializer(claims.map(x => (x._1, x._2)).toSeq)
   }
+}
 
-  def asBase64EncodedJson: String = {
-    this.asJsonString
+case class JwtClaimsSetJvalue(jvalue: JValue) extends JwtClaimsSet  {
+  def asJsonString: String = {
+    compact(jvalue)
+  }
+}
+
+case class JwtClaimsSetJsonString(json: String) extends JwtClaimsSet  {
+  def asJsonString: String = {
+    json
   }
 }

@@ -3,7 +3,7 @@ package authentikat.json
 import java.util.{TimeZone, Date}
 import java.text.SimpleDateFormat
 
-object JsonSerializer {
+object SimpleJsonSerializer {
 
   /**
    * Simple flat json StringBuilder based serializer.
