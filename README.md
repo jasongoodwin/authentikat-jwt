@@ -134,29 +134,51 @@ Parsing a Token
 Pasing a Token is also simple thanks to an extractor. You just pattern match against the jwt string.
 You will get the a JwtHeader, a JwtClaimsSetJvalue (json4s AST) and the signature.
 We can import some implicits to pimp out the object and give it some extra functionality.
-Here is an example that will give you back an Option with both the header and the claims set as a Map.
+Here is an example that will give you back the claims in a scala.util.Try[Map[String, String]].
+(It will fail if the json tree is not flat.)
 
-    import org.json4s.jackson.JsonMethods._
-    import org.json4s.JsonDSL._
-
-    val headerAndClaims: Option[(JwtHeader, Map[String, String])] = jwt match {
+    val claims: Option[Map[String, String]] = jwt match {
             case JsonWebToken(header, claimsSet, signature) =>
-              Some((header, claimsSet.asValues))
+              claimsSet.asSimpleMap.toOption
             case x =>
               None
     }
 
-That will turn the ClaimsSet Jvalue into a Map[String, String]. You can then access the map as any normal map.
+This is the simplest way to get your data. Now you can work with at like any Option[Map[String, String].
 
-    scala> headerAndClaims.get._2
-    res3: Map[String,String] = Map(Hey -> foo)
+    scala> claims.getOrElse(Map.empty[String, String]).get("Hey")
+    res1: Option[String] = Some(foo)
 
-    scala> res3.get("Hey")
-    res4: Option[String] = Some(foo)
+For complex json (eg nested objects), it is possible to work with the json4s JValue directly to allow for more complex use cases.
 
-Getting at the Claims
----------------------
+    import org.json4s.JsonDSL._
+    import org.json4s.JValue
 
-Now that we have everything extracted, we can access the claim like any other map:
+    val claims: Option[JValue] = jwt match {
+            case JsonWebToken(header, claimsSet, signature) =>
+              Option(claimsSet.jvalue)
+            case x =>
+              None
+    }
 
-    claimsSet.get("Hey") == Some("foo")
+That will leave you with an Option[JValue]
+Now you can work with the jvalue as described in the json4s documentation here: https://github.com/json4s/json4s
+It's similar to the native scala xml parsing.
+
+    scala> scala> (claims.get \ "Hey").values == "foo"
+           res13: Boolean = true
+
+Contributing
+============
+
+Contributions very welcome. Fork the repo and make a pull request.
+
+Licensing
+=========
+
+See attached LICENSE file. Apache2 licenced.
+
+Contributors
+============
+
+Jason Goodwin

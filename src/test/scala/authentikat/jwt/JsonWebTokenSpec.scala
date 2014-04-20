@@ -10,7 +10,6 @@ class JsonWebTokenSpec extends FunSpec with ShouldMatchers {
   import org.json4s.JsonDSL._
   import org.json4s.jackson.JsonMethods._
 
-
   describe("JsonWebToken") {
     val header = JwtHeader("HS256")
     val claims = JwtClaimsSetMap(Map("Hey" -> "foo"))
@@ -54,7 +53,7 @@ class JsonWebTokenSpec extends FunSpec with ShouldMatchers {
       result should equal(true)
     }
 
-    it("extracted claims set should be jvalue ast regardless of input type") {
+    it("extracted claims set should be jvalue") {
 
       val jwt = JsonWebToken.apply(header, claims, "secretkey")
       val result = jwt match {
