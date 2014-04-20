@@ -38,9 +38,9 @@ JwtHeader
 The first part of the token is the header.
 The header contains info needed to understand the content of the key. 
 
-- It contains the algorith used for the Signature - in the example case, HMAC SHA-256 .
-- It contains an optional cty (content) field - default containing "JWT" to indicate this is a Json Web Token.
-- It can also contain a content type ("cty") field, This field would indicate that the content is another token. (This feature is not currently supported.)
+- alg: It contains the algorith used for the Signature - in the example case, HMAC SHA-256 .
+- typ: It contains an optional typ (mimeType) field - default containing "JWT" to indicate this is a Json Web Token.
+- cty: It can also contain a content type ("cty") field, This field, if used, could indicate that the content is another token. (This feature is not currently supported.)
 
 Currently supported encryption algorithms:
 - "none" gives a blank signature. It could be used for passing data around in a small space such as a header.
