@@ -105,15 +105,18 @@ The header takes an Algorithm. Eg:
 
     val header = JwtHeader("HS256")
 
-The claims take a Map[String, Any]. You should check the spec to see what common public claims. Eg:
+There are 3 ClaimsSet constructors. Here we'll use the Map[String, Any] (JwtClaimsSetMap). You should check the spec to see what common public claims are in use.
+We will use a private claim called 'Hey'. Eg:
 
-    val claimsSet = JwtClaimsSet(Map("Hey" -> "foo"))
+    val claimsSet = JwtClaimsSetMap(Map("Hey" -> "foo"))
 
 Once you have a JwtClaimsSet and JwtHeader, you can make a new token with your secret key:
 
     val jwt: String = JsonWebToken(header, claimsSet, "secretkey")
 
-There is your token - you can use it now!
+That will return your token - you can use it now!
+
+    jwt: String = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ==.e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
 
 Validating a Token
 ------------------
@@ -129,14 +132,27 @@ Parsing a Token
 ---------------
 
 Pasing a Token is also simple thanks to an extractor. You just pattern match against the jwt string.
-Here is an example that will give you back an Option with both the header and the claims set.
+You will get the a JwtHeader, a JwtClaimsSetJvalue (json4s AST) and the signature.
+We can import some implicits to pimp out the object and give it some extra functionality.
+Here is an example that will give you back an Option with both the header and the claims set as a Map.
+
+    import org.json4s.jackson.JsonMethods._
+    import org.json4s.JsonDSL._
 
     val headerAndClaims: Option[(JwtHeader, Map[String, String])] = jwt match {
             case JsonWebToken(header, claimsSet, signature) =>
-              Some((header, claimsSet.claims))
+              Some((header, claimsSet.asValues))
             case x =>
               None
     }
+
+That will turn the ClaimsSet Jvalue into a Map[String, String]. You can then access the map as any normal map.
+
+    scala> headerAndClaims.get._2
+    res3: Map[String,String] = Map(Hey -> foo)
+
+    scala> res3.get("Hey")
+    res4: Option[String] = Some(foo)
 
 Getting at the Claims
 ---------------------

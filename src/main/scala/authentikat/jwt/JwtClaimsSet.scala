@@ -2,7 +2,6 @@ package authentikat.jwt
 
 import authentikat.json.SimpleJsonSerializer
 import org.json4s._
-import org.json4s.jackson.JsonMethods._
 
 sealed trait JwtClaimsSet {
   def asJsonString: String
@@ -15,8 +14,15 @@ case class JwtClaimsSetMap(claims: Map[String, Any]) extends JwtClaimsSet {
 }
 
 case class JwtClaimsSetJvalue(jvalue: JValue) extends JwtClaimsSet  {
+  import org.json4s.jackson.JsonMethods._
+  implicit val formats = org.json4s.DefaultFormats
+
   def asJsonString: String = {
     compact(jvalue)
+  }
+
+  def asValues: Map[String, String] = {
+    jvalue.extract[Map[String, String]]
   }
 }
 
