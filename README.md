@@ -2,7 +2,12 @@ authentikat-jwt
 ===============
 
 A simple scala-jwt library.
+Json is backed by the always fast Jackson with a simple native api and optional Json4s Json DSL for complex needs.
 
+Motivation
+----------
+
+The motivation for this project is to eventually create an OSS Security Token Service for distributed systems.
 
 JWT - A Claims Based Authentication
 ===================================
@@ -28,14 +33,18 @@ In the example above, they contain the following simple json:
 JwtHeader
 ---------
 
-The header contains the algorith used for the Signature - in this case HMAC using SHA-256 .
-And also contains an optional cty field - "JWT" to indicate this is a Json Web Token.
-While not supported by AuthentikatJwt, the It can also contain a content type ("cty") field
-This field would indicate if the content if another token.
-This feature is not currently supported but you could include another token in the claims.
+    Header:
+    {"alg":"HS256","typ":"JWT"} + Base64Encoding = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-(Note: At time of writing supported algorithms are:
-- "none"
+The first part of the token is the header.
+The header contains info needed to understand the content of the key. 
+
+- It contains the algorith used for the Signature - in the example case, HMAC SHA-256 .
+- It contains an optional cty (content) field - default containing "JWT" to indicate this is a Json Web Token.
+- It can also contain a content type ("cty") field, This field would indicate that the content is another token. (This feature is not currently supported.)
+
+Currently supported encryption algorithms:
+- "none" gives a blank signature. It could be used for passing data around in a small space such as a header.
 - "HS256"
 - "HS384"
 - "HS512"
@@ -43,35 +52,44 @@ This feature is not currently supported but you could include another token in t
 JwtClaimsSet
 ------------
 
-The Claims set can contain any number of public or private claims.
-The public claims are defined in the JWT draft here: http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html
-They include items like Issue (iss) that indicates who the token was created by. It can contain an Expiry (exp) as well to indicate
-when the token is expired.
+    ClaimsSet:
+    {"Hey":"foo"} + Base64Encoding = eyJIZXkiOiJmb28ifQ==
+
+The second part of the token is the claims.
+Jwt is claims based authentication. See: http://en.wikipedia.org/wiki/Claims-based_identity
+
+The Claims Set can contain any number of public or private claims. Because the claims are used to create a signature with a secret key, they cannot be modified after the token is signed.
+
+The optional public claims that the standard supports are defined in the JWT draft here: http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html
+They include items like Issuer (iss) that indicates who the token was created by. It can contain an Expiry (exp) to indicate when the token will expire. 
+
+Private claims can be anything (but obviously should not duplicate keys in the public claims space). Consider data that might be used to draw user session info in a UI. Including a username in the private claims is useful for validating the token is being used by the appropriate user.
 
 Signature
 ---------
 
-Finally, there is a one way hash of the Base64 encoded claims set.
+    {"Hey":"foo"} + Base64Encoding + HmacSha256 = e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
+
+The third portion of the token is a one way hash of the Base64 encoded claims set.
 In the example, it's a hash using a secret key "secretkey" of the string "eyJIZXkiOiJmb28ifQ==" using Hmac SHA256.
 The result is Hex String encoded for a value of: e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
 
 JWT Use Cases
 -------------
 
-Let's take a quick minute to take stock of what this gives us.
-We have a set of claims that can include any data at all including an issuer and an expiry. If someone gets ahold of a token,
-it can then be validated as original against the secret key. The claims can basically be validated as no-one will have the secret key.
+Let's take a moment to take stock of what this gives us.
+We have a set of claims that can include any data at all including an issuer and an expiry time. Whenever your Security Token Service issues a token, it will be signed against claims. The claims on any token we recieve back can always be validated as no-one will have the secret key so any attempt to change the claims will result in a failure to validate the token.
 
 A couple quick use cases:
 If used between services behind a firewall, both the message creator and the receiver would have the secret key.
 In this way, they can validate the authenticity of messages between servers.
 
-For a user of a web application, a token can be sent back on login which can be used in the client to render user info.
-So for example the claims could have username, age, timezone, etc which can be used on the client side.
-Then the user always provides the token on request for restricted resources in an API (creating an article via REST for example.)
-The token can be authenticated to validate the user is infact who they say they are. If used like this, the token can be used instead of cookie store.
-This gets around CORS problems as the token can be sent to any service.
-Because of this, JWT is a good authentication strategy for OAUTH2 implementations.
+For a user of a web application, a token can issued by the security token service on login. That can then be used for both writing use info in the UI from the claims and also for authenticating requests for other assets.
+As an example, the claims could have username, age, timezone, etc which can be used on the client side.
+Then the user always provides the token in an "authorization" header on requests for restricted resources such as creating a post on their timeline.
+The token can be authenticated to validate the user is infact who they say they are. If used like this, the token can be used instead of, or in conjunction with, a session store.
+
+The nice thing about JWT is that you use a header for the data so it gets around CORS problems seen with cookies. The token can be validated by any service that can validate the token with the secret key.
 
 Usage Examples
 ==============
