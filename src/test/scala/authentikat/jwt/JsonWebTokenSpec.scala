@@ -21,12 +21,12 @@ class JsonWebTokenSpec extends FunSpec with ShouldMatchers {
     }
 
     it("should have three parts for a token created with a jvalue claims") {
-      val result = JsonWebToken.apply(header, JwtClaimsSetJvalue(jvalueClaims), "secretkey")
+      val result = JsonWebToken.apply(header, JwtClaimsSetJValue(jvalueClaims), "secretkey")
       result.split("\\.").length should equal(3)
     }
 
     it("should have three parts for a token created with a string claims") {
-      val result = JsonWebToken.apply(header, JwtClaimsSetJvalue("{\"json\":42}"), "secretkey")
+      val result = JsonWebToken.apply(header, JwtClaimsSetJValue("{\"json\":42}"), "secretkey")
       result.split("\\.").length should equal(3)
     }
 
@@ -34,7 +34,7 @@ class JsonWebTokenSpec extends FunSpec with ShouldMatchers {
       val expectedResult = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ==.e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647"
 
       val res1 = JsonWebToken.apply(header, JwtClaimsSetMap(Map("Hey" -> "foo")), "secretkey")
-      val res2 = JsonWebToken.apply(header, JwtClaimsSetJvalue(("Hey" -> "foo")), "secretkey")
+      val res2 = JsonWebToken.apply(header, JwtClaimsSetJValue(("Hey" -> "foo")), "secretkey")
       val res3 = JsonWebToken.apply(header, JwtClaimsSetJsonString("{\"Hey\":\"foo\"}"), "secretkey")
 
       res1 should equal(expectedResult)
@@ -63,7 +63,7 @@ class JsonWebTokenSpec extends FunSpec with ShouldMatchers {
           None
       }
 
-      result.get should equal(JwtClaimsSetJvalue(("Hey" -> "foo")))
+      result.get should equal(JwtClaimsSetJValue(("Hey" -> "foo")))
     }
 
     it("should validate a token successfully if same key is used") {

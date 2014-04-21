@@ -34,7 +34,7 @@ object JsonWebToken {
    * @return
    */
 
-  def unapply(jwt: String): Option[(JwtHeader, JwtClaimsSetJvalue, String)] = {
+  def unapply(jwt: String): Option[(JwtHeader, JwtClaimsSetJValue, String)] = {
     val sections = jwt.split("\\.")
 
     sections.length match {
@@ -45,7 +45,7 @@ object JsonWebToken {
         val headerJsonString = new String(base64Decoder.decodeBuffer(sections(0)), "UTF-8")
         val header = JwtHeader.fromJsonString(headerJsonString)
 
-        val claimsSet = JwtClaimsSetJvalue(parse(new String(base64Decoder.decodeBuffer(sections(1)), "UTF-8")))
+        val claimsSet = JwtClaimsSetJValue(parse(new String(base64Decoder.decodeBuffer(sections(1)), "UTF-8")))
 
         val signature = sections(2)
 

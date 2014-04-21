@@ -104,7 +104,7 @@ For now, run
 
 Then add dependency to your project:
 
-    "com.jason-goodwin" %% "authentikat-jwt" % "0.3.0"
+    "com.jason-goodwin" %% "authentikat-jwt" % "0.3.1"
 
 Creating a Token
 ----------------
@@ -122,10 +122,12 @@ The header takes an Algorithm. Eg:
 
     val header = JwtHeader("HS256")
 
-There are 3 ClaimsSet constructors. Here we'll use the Map[String, Any] (JwtClaimsSetMap). You should check the spec to see what common public claims are in use.
+There are 3 ClaimsSet constructors. Here we'll use the Map[String, Any] constructor. Other options are passing in a Json4s JValue or a Json String.
+You should check the spec to see what common public claims are in use.
+
 We will use a private claim called 'Hey'. Eg:
 
-    val claimsSet = JwtClaimsSetMap(Map("Hey" -> "foo"))
+    val claimsSet = JwtClaimsSet(Map("Hey" -> "foo"))
 
 Once you have a JwtClaimsSet and JwtHeader, you can make a new token with your secret key:
 

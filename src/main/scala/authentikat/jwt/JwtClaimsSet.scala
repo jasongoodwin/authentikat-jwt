@@ -8,6 +8,12 @@ sealed trait JwtClaimsSet {
   def asJsonString: String
 }
 
+object JwtClaimsSet {
+  def apply(claims: Map[String, Any]) = JwtClaimsSetMap(claims)
+  def apply(jvalue: JValue) = JwtClaimsSetJValue(jvalue)
+  def apply(json: String) = JwtClaimsSetJsonString(json)
+}
+
 case class JwtClaimsSetMap(claims: Map[String, Any]) extends JwtClaimsSet {
   implicit val formats = org.json4s.DefaultFormats
 
@@ -16,7 +22,7 @@ case class JwtClaimsSetMap(claims: Map[String, Any]) extends JwtClaimsSet {
   }
 }
 
-case class JwtClaimsSetJvalue(jvalue: JValue) extends JwtClaimsSet  {
+case class JwtClaimsSetJValue(jvalue: JValue) extends JwtClaimsSet  {
   import org.json4s.jackson.JsonMethods._
   implicit val formats = org.json4s.DefaultFormats
 

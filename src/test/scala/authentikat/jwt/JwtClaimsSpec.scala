@@ -12,14 +12,14 @@ class JwtClaimsSpec extends FunSpec with ShouldMatchers {
   describe("JwtClaimsSet") {
     it("asSimpleMap Should return a failure on complex hierarchies.") {
       val jvalueTree = render("Hey" -> ("Hey" -> "foo"))
-      val tryMap = JwtClaimsSetJvalue(jvalueTree).asSimpleMap
+      val tryMap = JwtClaimsSetJValue(jvalueTree).asSimpleMap
 
       tryMap.isFailure should be(true)
     }
 
     it("asSimpleMap Should succeed on flat hierarchies.") {
       val jvalueTree = render("Hey" -> "foo")
-      val tryMap = JwtClaimsSetJvalue(jvalueTree).asSimpleMap
+      val tryMap = JwtClaimsSetJValue(jvalueTree).asSimpleMap
 
       tryMap.isFailure should be(false)
       tryMap.get should equal(Map("Hey" -> "foo"))
