@@ -18,6 +18,5 @@ libraryDependencies ++= Seq(
 credentials += Credentials(Path.userHome / ".mdialog.credentials")
 
 resolvers ++= Seq(
-  "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
-  "mDialog releases" at "http://mdialog.github.com/releases/"
+  "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 )
