@@ -2,6 +2,7 @@ authentikat-jwt
 ===============
 
 A simple scala-jwt library.
+JWT - pronounced 'jot' - is a claims-based authentication standard. 
 
 Motivation
 ----------
@@ -11,17 +12,20 @@ The motivation for this project is to eventually create an OSS Security Token Se
 JWT - A Claims Based Authentication
 ===================================
 
-Before we get into how to use the library, let's assume we have a secret key, and the key is "secret-key".
-Let's start the usage example imagining we reveive an http request with a header containing a JWT (pronounced "Jot")
-We need to validate this token is okay. First, let's look at the structure of a JWT.
+Before we get into how to use the library, we'll explore a usage example to demonstrate how claims based authentication can be used.
 
-A token consists of 3 period separated values. A token might look like this:
+Let's assume we have a secret key, and the key is "secret-key".
+Let's start the usage example imagining we have an http based service or web application. We receive an http request to do something in our http server application with a header containing a JWT (pronounced "Jot")
+We need to validate the request is authenticated by analyzing the JWT. First, let's look at the structure of a JWT.
+
+A token consists of 3 dot separated values. The token our server receives:
 
     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ==.e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
     ^JwtHeader                           ^JwtClaimsSet        ^JsonWebSignature - One way hash of the JwtClaimsSet
 
-The JwtHeader and JwtClaimsSet are Base64Encoded Json - they can be decoded and used.
-In the example above, they contain the following simple json:
+The JwtHeader and JwtClaimsSet are Base64Encoded Json - they can be decoded and used. The signiture is used to validate the claims were created by someone with the secret key and to ensure they have not been modified since issuing.
+
+In the example above, the header and claims contain the following simple json:
 
     Header:
     {"alg":"HS256","typ":"JWT"}
