@@ -9,6 +9,15 @@ Motivation
 
 The motivation for this project is to eventually create an OSS Security Token Service for distributed systems.
 
+Setup
+=====
+
+Add the dependency
+    "com.jason-goodwin" % "authentikat-jwt" % "0.3.1"
+    
+Add the resolver or checkout and publish-local
+    (not yet published)
+
 JWT - A Claims Based Authentication
 ===================================
 
