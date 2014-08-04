@@ -12,11 +12,16 @@ The motivation for this project is to eventually create an OSS Security Token Se
 Setup
 =====
 
-Add the dependency
-    "com.jason-goodwin" % "authentikat-jwt" % "0.3.1"
-    
-Add the resolver or checkout and publish-local
-    (not yet published)
+Authentikat-Jwt has been published to sonatype:
+
+Add the resolver and the dependency
+
+
+resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
+
+libraryDependencies ++= Seq(
+  "com.jason-goodwin" %% "authentikat-jwt" % "0.3.1"
+)
 
 JWT - A Claims Based Authentication
 ===================================
