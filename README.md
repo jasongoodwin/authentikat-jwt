@@ -111,19 +111,6 @@ The nice thing about JWT is that you use a header for the data so it gets around
 Usage Examples
 ==============
 
-Adding the Dependency
----------------------
-
-Note on Dependency management in SBT - I'm waiting on a Sonatype repository to make public.
-
-For now, run
-
-    sbt publish-local
-
-Then add dependency to your project:
-
-    "com.jason-goodwin" %% "authentikat-jwt" % "0.3.1"
-
 Creating a Token
 ----------------
 
