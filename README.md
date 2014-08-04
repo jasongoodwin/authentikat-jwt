@@ -17,11 +17,11 @@ Authentikat-Jwt has been published to sonatype:
 Add the resolver and the dependency
 
 
-resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
+    resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
 
-libraryDependencies ++= Seq(
-  "com.jason-goodwin" %% "authentikat-jwt" % "0.3.1"
-)
+    libraryDependencies ++= Seq(
+      "com.jason-goodwin" %% "authentikat-jwt" % "0.3.1"
+    )
 
 JWT - A Claims Based Authentication
 ===================================
