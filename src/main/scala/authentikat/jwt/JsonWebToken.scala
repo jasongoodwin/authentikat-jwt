@@ -2,12 +2,11 @@ package authentikat.jwt
 
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import org.apache.commons.codec.binary.Base64.encodeBase64String
+import org.apache.commons.codec.binary.Base64.decodeBase64
 
 object JsonWebToken {
   import JsonWebSignature.HexToString._
-
-  private val base64Encoder = new sun.misc.BASE64Encoder
-  private val base64Decoder = new sun.misc.BASE64Decoder
 
   /**
    * Produces a JWT.
@@ -18,14 +17,14 @@ object JsonWebToken {
    */
 
   def apply(header: JwtHeader, claims: JwtClaimsSet, key: String): String = {
-    val encodedHeader = base64Encoder.encode(header.asJsonString.getBytes("UTF-8"))
-    val encodedClaims = base64Encoder.encode(claims.asJsonString.getBytes("UTF-8"))
+    val encodedHeader = encodeBase64String(header.asJsonString.getBytes("UTF-8"))
+    val encodedClaims = encodeBase64String(claims.asJsonString.getBytes("UTF-8"))
+    
+    val signingInput = encodedHeader + "." + encodedClaims
 
-    val encryptedClaims: String = JsonWebSignature(header.algorithm.getOrElse("none"), encodedClaims, key)
+    val encodedSignature: String = JsonWebSignature(header.algorithm.getOrElse("none"), signingInput, key)
 
-    Seq(encodedHeader,
-      encodedClaims,
-      encryptedClaims).mkString(".")
+    signingInput + "." + encodedSignature
   }
 
   /**
@@ -42,10 +41,10 @@ object JsonWebToken {
         import org.json4s.DefaultFormats
         implicit val formats = DefaultFormats
 
-        val headerJsonString = new String(base64Decoder.decodeBuffer(sections(0)), "UTF-8")
+        val headerJsonString = new String(decodeBase64(sections(0)), "UTF-8")
         val header = JwtHeader.fromJsonString(headerJsonString)
 
-        val claimsSet = JwtClaimsSetJValue(parse(new String(base64Decoder.decodeBuffer(sections(1)), "UTF-8")))
+        val claimsSet = JwtClaimsSetJValue(parse(new String(decodeBase64(sections(1)), "UTF-8")))
 
         val signature = sections(2)
 
@@ -71,7 +70,7 @@ object JsonWebToken {
 
     val sections = jwt.split("\\.")
 
-    val headerJsonString = new String(base64Decoder.decodeBuffer(sections(0)), "UTF-8")
+    val headerJsonString = new String(decodeBase64(sections(0)), "UTF-8")
     val header = JwtHeader.fromJsonString(headerJsonString)
 
     val signature = JsonWebSignature(header.algorithm.getOrElse("none"), sections(1), key)
