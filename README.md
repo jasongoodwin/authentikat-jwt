@@ -12,15 +12,14 @@ The motivation for this project is to eventually create an OSS Security Token Se
 Setup
 =====
 
-Authentikat-Jwt has been published to sonatype:
+Authentikat-Jwt has been published for scala 2.10 and 2.11:
 
 Add the resolver and the dependency
-
 
     resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
 
     libraryDependencies ++= Seq(
-      "com.jason-goodwin" %% "authentikat-jwt" % "0.3.1"
+      "com.jason-goodwin" %% "authentikat-jwt" % "0.3.3"
     )
 
 JWT - A Claims Based Authentication
