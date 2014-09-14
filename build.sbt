@@ -2,7 +2,7 @@ name := "authentikat-jwt"
 
 organization := "com.jason-goodwin"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.11.2"
 
 parallelExecution := false
 
@@ -10,9 +10,9 @@ scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.9",
-  "org.json4s" %% "json4s-native" % "3.2.8",
-  "org.json4s" %% "json4s-jackson" % "3.2.8",
-  "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+  "org.json4s" %% "json4s-native" % "3.2.10",
+  "org.json4s" %% "json4s-jackson" % "3.2.10",
+  "org.scalatest" %% "scalatest" % "2.1.7" % "test"
 )
 
 credentials += Credentials(Path.userHome / ".mdialog.credentials")
