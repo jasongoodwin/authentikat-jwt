@@ -4,6 +4,8 @@ organization := "com.jason-goodwin"
 
 scalaVersion := "2.11.2"
 
+crossScalaVersions := Seq("2.10.4", "2.11.2") //sbt '+ publish'
+
 parallelExecution := false
 
 scalacOptions ++= Seq("-unchecked", "-deprecation")
@@ -31,6 +33,8 @@ publishTo := {
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
 }
 
+publishArtifact in Test := false
+
 pomIncludeRepository := { _ => false }
 
 pomExtra := (
@@ -53,3 +57,8 @@ pomExtra := (
       <url>http://refactoringfactory.wordpress.com</url>
     </developer>
   </developers>)
+
+credentials += Credentials("Sonatype Nexus Repository Manager",
+                           "oss.sonatype.org",
+                           "<your username>",
+                           "<your password>")
