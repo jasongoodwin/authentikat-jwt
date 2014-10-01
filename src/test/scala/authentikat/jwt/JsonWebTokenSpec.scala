@@ -31,7 +31,7 @@ class JsonWebTokenSpec extends FunSpec with ShouldMatchers {
     }
 
     it("should produce the same results for all three claims types") {
-      val expectedResult = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.7d35bd7f6c39a244a96bbbbae1dea569041ba41760a1316f20f731e608bbd11f"
+      val expectedResult = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8"
 
       val res1 = JsonWebToken.apply(header, JwtClaimsSetMap(Map("Hey" -> "foo")), "secretkey")
       val res2 = JsonWebToken.apply(header, JwtClaimsSetJValue(("Hey" -> "foo")), "secretkey")

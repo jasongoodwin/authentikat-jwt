@@ -22,7 +22,8 @@ object JsonWebToken {
 
     val signingInput = encodedHeader + "." + encodedClaims
 
-    val encodedSignature: String = JsonWebSignature(header.algorithm.getOrElse("none"), signingInput, key)
+    val encodedSignature: String = encodeBase64URLSafeString(
+        JsonWebSignature(header.algorithm.getOrElse("none"), signingInput, key))
 
     signingInput + "." + encodedSignature
   }
@@ -73,7 +74,8 @@ object JsonWebToken {
     val headerJsonString = new String(decodeBase64(sections(0)), "UTF-8")
     val header = JwtHeader.fromJsonString(headerJsonString)
 
-    val signature = JsonWebSignature(header.algorithm.getOrElse("none"), sections(0) + "." + sections(1), key)
+    val signature = encodeBase64URLSafeString(
+        JsonWebSignature(header.algorithm.getOrElse("none"), sections(0) + "." + sections(1), key))
 
     sections(2).contentEquals(signature)
   }
