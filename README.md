@@ -195,6 +195,8 @@ Contributing
 ============
 
 Contributions very welcome. Fork the repo and make a pull request.
+Please validate any JWTs created here after making a change: http://jwt.io/ 
+Or create a test with a known correct JWT :)
 
 Licensing
 =========
