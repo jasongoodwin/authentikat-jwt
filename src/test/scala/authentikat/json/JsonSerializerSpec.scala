@@ -14,7 +14,7 @@ class JsonSerializerSpec extends FunSpec with ShouldMatchers {
     }
 
     it("should produce json with dates formatted as ISO8601") {
-      val date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:00:00")
+      val date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss Z").parse("2011-01-01 00:00:00 -0500")
       val stuffToSerialize = Seq(("key1", "value1"), ("key2", date))
 
       SimpleJsonSerializer(stuffToSerialize) should equal( """{"key1":"value1","key2":"2011-01-01T05:00Z"}""")
