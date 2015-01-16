@@ -4,6 +4,7 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString
 import org.apache.commons.codec.binary.Base64.decodeBase64
+import util.control.Exception.allCatch
 
 object JsonWebToken {
   import JsonWebSignature.HexToString._
@@ -42,12 +43,19 @@ object JsonWebToken {
 
         val headerJsonString = new String(decodeBase64(providedHeader), "UTF-8")
         val header = JwtHeader.fromJsonStringOpt(headerJsonString)
+        val optClaimsSet = allCatch opt {
+          parse(new String(decodeBase64(providedClaims), "UTF-8"))
+        }
 
-        val claimsSet = JwtClaimsSetJValue(parse(new String(decodeBase64(providedClaims), "UTF-8")))
+        if(header.isEmpty || optClaimsSet.isEmpty)
+          None
+        else {
+          val claimsSet = JwtClaimsSetJValue(optClaimsSet.get)
 
-        val signature = providedSignature
+          val signature = providedSignature
 
-        Some(header.getOrElse(JwtHeader(None, None, None)), claimsSet, signature)
+          Some(header.get, claimsSet, signature)
+        }
       case _ =>
         None
     }
