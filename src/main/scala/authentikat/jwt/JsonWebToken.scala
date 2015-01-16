@@ -35,21 +35,19 @@ object JsonWebToken {
    */
 
   def unapply(jwt: String): Option[(JwtHeader, JwtClaimsSetJValue, String)] = {
-    val sections = jwt.split("\\.")
-
-    sections.length match {
-      case 3 =>
+    jwt.split("\\.") match {
+      case Array(providedHeader, providedClaims, providedSignature) =>
         import org.json4s.DefaultFormats
         implicit val formats = DefaultFormats
 
-        val headerJsonString = new String(decodeBase64(sections(0)), "UTF-8")
-        val header = JwtHeader.fromJsonString(headerJsonString)
+        val headerJsonString = new String(decodeBase64(providedHeader), "UTF-8")
+        val header = JwtHeader.fromJsonStringOpt(headerJsonString)
 
-        val claimsSet = JwtClaimsSetJValue(parse(new String(decodeBase64(sections(1)), "UTF-8")))
+        val claimsSet = JwtClaimsSetJValue(parse(new String(decodeBase64(providedClaims), "UTF-8")))
 
-        val signature = sections(2)
+        val signature = providedSignature
 
-        Some(header, claimsSet, signature)
+        Some(header.getOrElse(JwtHeader(None, None, None)), claimsSet, signature)
       case _ =>
         None
     }
@@ -69,15 +67,19 @@ object JsonWebToken {
     import org.json4s.DefaultFormats
     implicit val formats = DefaultFormats
 
-    val sections = jwt.split("\\.")
+    jwt.split("\\.") match {
+      case Array(providedHeader, providedClaims, providedSignature) =>
 
-    val headerJsonString = new String(decodeBase64(sections(0)), "UTF-8")
-    val header = JwtHeader.fromJsonString(headerJsonString)
+        val headerJsonString = new String(decodeBase64(providedHeader), "UTF-8")
+        val header = JwtHeader.fromJsonStringOpt(headerJsonString).getOrElse(JwtHeader(None, None, None))
 
-    val signature = encodeBase64URLSafeString(
-        JsonWebSignature(header.algorithm.getOrElse("none"), sections(0) + "." + sections(1), key))
+        val signature = encodeBase64URLSafeString(
+          JsonWebSignature(header.algorithm.getOrElse("none"), providedHeader + "." + providedClaims, key))
 
-    sections(2).contentEquals(signature)
+        providedSignature.contentEquals(signature)
+      case _ =>
+        false
+    }
   }
 
 }
