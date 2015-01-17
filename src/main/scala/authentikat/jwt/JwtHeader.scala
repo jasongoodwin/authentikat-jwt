@@ -4,6 +4,7 @@ import authentikat.json.SimpleJsonSerializer
 
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import util.control.Exception.allCatch
 
 case class JwtHeader(algorithm: Option[String],
                      contentType: Option[String],
@@ -37,5 +38,9 @@ object JwtHeader {
     val typ = (ast \ "typ").extract[Option[String]]
 
     JwtHeader(alg, cty, typ)
+  }
+
+  def fromJsonStringOpt(jsonString: String): Option[JwtHeader] = allCatch opt {
+    fromJsonString(jsonString)
   }
 }
