@@ -19,7 +19,7 @@ Add the resolver and the dependency:
     resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
 
     libraryDependencies ++= Seq(
-      "com.jason-goodwin" %% "authentikat-jwt" % "0.3.5"
+      "com.jason-goodwin" %% "authentikat-jwt" % "0.4.0"
     )
 
 JWT - A Claims Based Authentication
