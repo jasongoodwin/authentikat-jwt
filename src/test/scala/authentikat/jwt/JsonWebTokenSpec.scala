@@ -4,8 +4,9 @@ import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
 import java.util.{Date, TimeZone}
 import java.text.SimpleDateFormat
+import org.scalatest.Matchers
 
-class JsonWebTokenSpec extends FunSpec with ShouldMatchers {
+class JsonWebTokenSpec extends FunSpec with Matchers {
 
   import org.json4s.JsonDSL._
   import org.json4s.jackson.JsonMethods._

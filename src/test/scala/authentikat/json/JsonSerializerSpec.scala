@@ -3,8 +3,9 @@ package authentikat.json
 import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
 import java.text.SimpleDateFormat
+import org.scalatest.Matchers
 
-class JsonSerializerSpec extends FunSpec with ShouldMatchers {
+class JsonSerializerSpec extends FunSpec with Matchers {
 
   describe("JsonBuilder") {
     it("should produce json with strings") {
