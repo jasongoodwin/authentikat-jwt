@@ -2,7 +2,7 @@
 *.log
 
 # sbt specific
-.cache/
+.cache
 .history/
 .lib/
 dist/*
@@ -17,3 +17,7 @@ project/plugins/project/
 .worksheet
 .idea/
 .idea_modules/
+
+.classpath
+.project
+.settings/
