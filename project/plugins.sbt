@@ -4,4 +4,3 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-pgp" % "0.8.3")
 
 addSbtPlugin("commons-codec" % "commons-codec" % "1.6")
 
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.5.0")
