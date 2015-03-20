@@ -34,7 +34,7 @@ We need to validate the request is authenticated by analyzing the JWT. First, le
 A token consists of 3 dot separated values. The token our server receives:
 
     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ==.e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
-    ^JwtHeader                           ^JwtClaimsSet        ^JsonWebSignature - One way hash of the JwtClaimsSet
+    ^JwtHeader                           ^JwtClaimsSet        ^JsonWebSignature - One way hash of the JwtHeader and JwtClaimsSet
 
 The JwtHeader and JwtClaimsSet are Base64Encoded Json - they can be decoded and used. The signiture is used to validate the claims were created by someone with the secret key and to ensure they have not been modified since issuing.
 
