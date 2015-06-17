@@ -38,7 +38,7 @@ publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 
 pomExtra := (
-  <url>http://jasongoodwin.com/authentikat-jwt</url>
+  <url>http://github.com/jason-goodwin.com/authentikat-jwt</url>
   <licenses>
     <license>
       <name>Apache2</name>
