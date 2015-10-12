@@ -9,7 +9,7 @@ class JsonWebSignatureSpec extends FunSpec with Matchers {
 
   describe("JsonWebSignature") {
     it("Should generate nothing for algo = none ") {
-      JsonWebSignature(none, "someData", "secretKey") should equal(Array.empty[Byte])
+      JsonWebSignature(NONE, "someData", "secretKey") should equal(Array.empty[Byte])
     }
 
     it("Should generate data for HMAC SHA 256 algorithm") {
