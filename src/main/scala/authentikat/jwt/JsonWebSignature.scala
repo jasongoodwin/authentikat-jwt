@@ -9,6 +9,7 @@ import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.Signature;
+import org.bouncycastle.jce.provider._
 
 /**
  * Json Web Algorithms for Encrypting JWS.
@@ -49,16 +50,17 @@ object JsonWebSignature {
 
   private case object RsaSha {
     def apply(algorithm: String, data: String, key: String): Array[Byte] = {
+      Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider())
+
       val _key = Option(key).getOrElse(throw new IllegalArgumentException("Missing key for JWT encryption via " + algorithm))
 
-      KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA", "BC")
+      val keyGen: KeyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC")
 
-      // this should probably be defined by the algorithm parameter
-      keyGen.initialize(512, new SecureRandom())
+      // TODO: this should probably be defined by the algorithm parameter
+      keyGen.initialize(256, key.getBytes)
 
-      // we should take the provided key
-      KeyPair keyPair = keyGen.generateKeyPair()
-      Signature signature = Signature.getInstance("SHA1withRSA", "BC")
+      val keyPair: KeyPair = keyGen.generateKeyPair()
+      val signature: Signature = Signature.getInstance("SHA1withRSA", "BC")
 
       signature.initSign(keyPair.getPrivate(), new SecureRandom())
 
