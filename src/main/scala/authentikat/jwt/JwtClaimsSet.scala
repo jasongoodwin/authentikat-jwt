@@ -1,6 +1,5 @@
 package authentikat.jwt
 
-import authentikat.json.SimpleJsonSerializer
 import org.json4s._
 import scala.util.Try
 
@@ -18,7 +17,8 @@ case class JwtClaimsSetMap(claims: Map[String, Any]) extends JwtClaimsSet {
   implicit val formats = org.json4s.DefaultFormats
 
   def asJsonString: String = {
-    SimpleJsonSerializer(claims.map(x => (x._1, x._2)).toSeq)
+    import org.json4s.native.Serialization.write
+    write(claims)
   }
 }
 

@@ -1,24 +1,28 @@
 package authentikat.jwt
 
-import authentikat.json.SimpleJsonSerializer
-
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
-import util.control.Exception.allCatch
+
+import scala.util.control.Exception.allCatch
 
 case class JwtHeader(
-  algorithm: Option[String],
+    algorithm: Option[String],
     contentType: Option[String],
     typ: Option[String]
 ) {
 
   def asJsonString: String = {
     val toSerialize =
-      algorithm.map(x => ("alg", x)).toSeq ++
+      algorithm.map(x => ("alg" -> x)).toSeq ++
         contentType.map(x => ("cty", x)).toSeq ++
         typ.map(x => ("typ", x)).toSeq
 
-    SimpleJsonSerializer(toSerialize)
+    val map = toSerialize.toMap
+
+    import org.json4s.native.Serialization.write
+    implicit val formats = org.json4s.DefaultFormats
+
+    write(map)
   }
 }
 

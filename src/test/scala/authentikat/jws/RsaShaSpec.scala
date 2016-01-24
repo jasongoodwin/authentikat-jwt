@@ -25,20 +25,62 @@ class RsaShaSpec extends FunSpec with Matchers {
   val privateKey = KeyReader.getPrivate("src/test/resources/private.der")
 
   describe("RsaShaSigner") {
-    it("Should produce signature from privateKey") {
-      val signer = new RsaShaSigner(privateKey, RS512)
-      val signature = signer("someData")
-      signature.length should be(256)
+
+    describe("RS256") {
+      it("Should produce signature from privateKey") {
+        val signer = new RsaShaSigner(privateKey, RS512)
+        val signature = signer("someData")
+        signature.length should be(256)
+      }
+    }
+
+    describe("RS384") {
+      it("Should produce signature from privateKey") {
+        val signer = new RsaShaSigner(privateKey, RS384)
+        val signature = signer("someData")
+        signature.length should be(256)
+      }
+    }
+
+    describe("RS512") {
+      it("Should produce signature from privateKey") {
+        val signer = new RsaShaSigner(privateKey, RS512)
+        val signature = signer("someData")
+        signature.length should be(256)
+      }
     }
   }
 
   describe("RsaShaValidator") {
-    it("Should validate signature using private Key") {
-      val signer = new RsaShaSigner(privateKey, RS512)
-      val signature = Base64.encodeBase64(signer("someData"))
 
-      val validator = new RsaShaVerifier(publicKey, RS512)
-      validator("someData", new String(signature)) should equal(true)
+    describe("RS256") {
+      it("Should validate signature using private Key") {
+        val signer = new RsaShaSigner(privateKey, RS256)
+        val signature = Base64.encodeBase64(signer("someData"))
+
+        val validator = new RsaShaVerifier(publicKey, RS256)
+        validator("someData", new String(signature)) should equal(true)
+      }
+    }
+
+    describe("RS384") {
+      it("Should validate signature using private Key") {
+        val signer = new RsaShaSigner(privateKey, RS384)
+        val signature = Base64.encodeBase64(signer("someData"))
+
+        val validator = new RsaShaVerifier(publicKey, RS384)
+        validator("someData", new String(signature)) should equal(true)
+      }
+    }
+
+    describe("RS512") {
+      it("Should validate signature using private Key") {
+        val signer = new RsaShaSigner(privateKey, RS512)
+        val signature = Base64.encodeBase64(signer("someData"))
+
+        val validator = new RsaShaVerifier(publicKey, RS512)
+        validator("someData", new String(signature)) should equal(true)
+      }
     }
   }
 

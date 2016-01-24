@@ -83,7 +83,7 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
   describe("JwtClaimsSet") {
 
     val date = new Date
-    val dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    val dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
     val dateIso8601 = dateFormat.format(date)
 
