@@ -56,27 +56,5 @@ object JsonWebToken {
         None
     }
   }
-
-  // //TODO 1.0.0-SNAPSHOT discuss: Should there be some behavior to abstract the details of validation
-  // def validate(jwt: String, key: String): Boolean = {
-  //    true
-  //    import org.json4s.DefaultFormats
-  //    implicit val formats = DefaultFormats
-  //
-  //    jwt.split("\\.") match {
-  //      case Array(providedHeader, providedClaims, providedSignature) =>
-  //
-  //        val headerJsonString = new String(decodeBase64(providedHeader), "UTF-8")
-  //        val header = JwtHeader.fromJsonStringOpt(headerJsonString).getOrElse(JwtHeader(None, None, None))
-  //
-  //        val signature = encodeBase64URLSafeString(
-  //          JsonWebSignature(header.algorithm.getOrElse("none"), providedHeader + "." + providedClaims, key))
-  //
-  //        providedSignature.contentEquals(signature)
-  //      case _ =>
-  //        false
-  //    }
-  //  }
-
 }
 

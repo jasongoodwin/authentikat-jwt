@@ -10,7 +10,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
- * Helper logic nabbed from stack
+ * Helper logic nabbed from stack (thanks!)
  * http://stackoverflow.com/questions/11410770/load-rsa-public-key-from-file
  */
 

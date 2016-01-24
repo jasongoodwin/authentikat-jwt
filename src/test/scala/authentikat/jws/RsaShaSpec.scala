@@ -6,21 +6,6 @@ import org.scalatest.{ FunSpec, Matchers }
 
 class RsaShaSpec extends FunSpec with Matchers {
 
-  //TODO Get RSA keys from bytes?
-  //  Array[Byte] =  privateKeyBytes;
-  //  byte[] publicKeyBytes;
-  //  val kf = KeyFactory.getInstance("RSA"); // or "EC" or whatever
-  //  val privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
-  //  val publicKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
-
-  //  val keyGen = KeyPairGenerator.getInstance("RSA")
-  //  keyGen.initialize(256)
-  //  val keyPair = keyGen.genKeyPair()
-  //
-  //  val publicKey = keyPair.getPublic()
-  //  val privateKey = keyPair.getPrivate()
-  //
-
   val publicKey = KeyReader.getPublic("src/test/resources/public_key.der")
   val privateKey = KeyReader.getPrivate("src/test/resources/private.der")
 
