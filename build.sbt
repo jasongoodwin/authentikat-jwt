@@ -17,8 +17,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.5" % Test
 )
 
-credentials += Credentials(Path.userHome / ".mdialog.credentials")
-
 resolvers ++= Seq(
   "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 )
@@ -57,6 +55,9 @@ pomExtra := (
       <url>http://refactoringfactory.wordpress.com</url>
     </developer>
   </developers>)
+
+
+credentials += Credentials(Path.userHome / ".mvn.credentials") //TODO use these
 
 credentials += Credentials("Sonatype Nexus Repository Manager",
                            "oss.sonatype.org",

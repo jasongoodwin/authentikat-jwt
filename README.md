@@ -193,6 +193,25 @@ It's similar to the native scala xml parsing.
     scala> scala> (claims.get \ "Hey").values == "foo"
            res13: Boolean = true
 
+Generating RSA Keys
+===================
+
+adapted from: http://codeartisan.blogspot.ca/2009/05/public-key-cryptography-in-java.html
+
+Generate a 2048-bit RSA private key
+
+$ openssl genrsa -out private_key.pem 2048
+
+Convert private Key to PKCS#8 format (so Java can read it)
+
+$ openssl pkcs8 -topk8 -nocrypt -in private_key.pem -outform der -out private.der
+
+Output public key portion in DER format (so Java can read it)
+
+$ openssl rsa -in private_key.pem -pubout -outform DER -out public_key.der
+
+
+
 Contributing
 ============
 

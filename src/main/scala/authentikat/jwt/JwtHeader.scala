@@ -6,9 +6,11 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import util.control.Exception.allCatch
 
-case class JwtHeader(algorithm: Option[String],
-                     contentType: Option[String],
-                     typ: Option[String]) {
+case class JwtHeader(
+  algorithm: Option[String],
+    contentType: Option[String],
+    typ: Option[String]
+) {
 
   def asJsonString: String = {
     val toSerialize =
@@ -26,7 +28,7 @@ object JwtHeader {
 
   implicit val formats = DefaultFormats
 
-  def apply(algorithm: String = null, contentType: String = null, typ: String = "JWT"): JwtHeader = {
+  def apply(algorithm: String, contentType: String = null, typ: String = "JWT"): JwtHeader = {
     JwtHeader(Option(algorithm), Option(contentType), Option(typ))
   }
 

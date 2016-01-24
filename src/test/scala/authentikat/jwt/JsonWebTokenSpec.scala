@@ -1,10 +1,16 @@
 package authentikat.jwt
 
-import org.scalatest.FunSpec
-import org.scalatest.matchers.ShouldMatchers
-import java.util.{Date, TimeZone}
 import java.text.SimpleDateFormat
-import org.scalatest.Matchers
+import java.util.{ Date, TimeZone }
+
+import authentikat.jws.JwsSigner
+import org.scalatest.{ FunSpec, Matchers }
+
+class FakeSigner extends JwsSigner {
+  override def apply(data: String): Array[Byte] = {
+    "MOCK".getBytes("UTF-8")
+  }
+}
 
 class JsonWebTokenSpec extends FunSpec with Matchers {
 
@@ -14,49 +20,46 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
   describe("JsonWebToken") {
     val header = JwtHeader("HS256")
     val claims = JwtClaimsSetMap(Map("Hey" -> "foo"))
-    val jvalueClaims = render("Hey" -> ("Hey" -> "foo") )
+    val jvalueClaims = render("Hey" -> ("Hey" -> "foo"))
 
-    it("should have three parts for a token created with claims map claims") {
-      val result = JsonWebToken.apply(header, claims, "secretkey")
-      result.split("\\.").length should equal(3)
+    describe("when a signer is provided") {
+      it("should have three parts for a token created with claims map claims") {
+        val result = JsonWebToken(header, claims, new FakeSigner)
+        result.split("\\.").length should equal(3)
+      }
+
+      it("should have three parts for a token created with a jvalue claims") {
+        val result = JsonWebToken.apply(header, JwtClaimsSetJValue(jvalueClaims), new FakeSigner)
+        result.split("\\.").length should equal(3)
+      }
+
+      it("should have three parts for a token created with a string claims") {
+        val result = JsonWebToken.apply(header, JwtClaimsSetJValue("{\"json\":42}"), new FakeSigner)
+        result.split("\\.").length should equal(3)
+      }
     }
 
-    it("should have three parts for a token created with a jvalue claims") {
-      val result = JsonWebToken.apply(header, JwtClaimsSetJValue(jvalueClaims), "secretkey")
-      result.split("\\.").length should equal(3)
-    }
+    it("should produce the same results regardless of claims type") {
+      val expectedResult = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.MOCK"
 
-    it("should have three parts for a token created with a string claims") {
-      val result = JsonWebToken.apply(header, JwtClaimsSetJValue("{\"json\":42}"), "secretkey")
-      result.split("\\.").length should equal(3)
-    }
+      val res1 = JsonWebToken(header, JwtClaimsSetMap(Map("Hey" -> "foo")), new FakeSigner)
+      val res2 = JsonWebToken(header, JwtClaimsSetJValue(("Hey" -> "foo")), new FakeSigner)
+      val res3 = JsonWebToken(header, JwtClaimsSetJsonString("{\"Hey\":\"foo\"}"), new FakeSigner)
 
-    it("should produce the same results for all three claims types") {
-      val expectedResult = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8"
-
-      val res1 = JsonWebToken.apply(header, JwtClaimsSetMap(Map("Hey" -> "foo")), "secretkey")
-      val res2 = JsonWebToken.apply(header, JwtClaimsSetJValue(("Hey" -> "foo")), "secretkey")
-      val res3 = JsonWebToken.apply(header, JwtClaimsSetJsonString("{\"Hey\":\"foo\"}"), "secretkey")
-
-      res1 should equal(expectedResult)
-      res2 should equal(expectedResult)
-      res3 should equal(expectedResult)
+      res1 should equal(res2)
+      res2 should equal(res3)
     }
 
     it("should be extracted by extractor") {
-      val jwt = JsonWebToken.apply(header, claims, "secretkey")
-      val result = jwt match {
+      val jwt = JsonWebToken.apply(header, claims, new FakeSigner)
+      jwt match {
         case JsonWebToken(x, y, z) =>
-          true
-        case x =>
-          false
+        case _ => fail("didn't extract values")
       }
-      result should equal(true)
     }
 
     it("extracted claims set should be jvalue") {
-
-      val jwt = JsonWebToken.apply(header, claims, "secretkey")
+      val jwt = JsonWebToken.apply(header, claims, new FakeSigner)
       val result = jwt match {
         case JsonWebToken(x, y, z) =>
           Some(y)
@@ -64,25 +67,7 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
           None
       }
 
-      result.get should equal(JwtClaimsSetJValue(("Hey" -> "foo")))
-    }
-
-    it("should validate a token successfully if same key is used") {
-      val jwt = JsonWebToken.apply(header, claims, "secretkey")
-      JsonWebToken.validate(jwt, "secretkey") should equal(true)
-    }
-
-    it("should fail to validate a token if different key is used") {
-      val jwt = JsonWebToken.apply(header, claims, "secretkey")
-      JsonWebToken.validate(jwt, "here be dragons") should equal(false)
-    }
-
-    it("should report validation failure and not crash if the token is incorrectly formatted") {
-      JsonWebToken.validate("", "secretkey") should equal(false)
-    }
-
-    it("should report a validation failure and not crash if the token components are incorrectly formatted") {
-      JsonWebToken.validate("..", "secretkey") should equal(false)
+      result should equal(Some(JwtClaimsSetJValue("Hey" -> "foo")))
     }
   }
 

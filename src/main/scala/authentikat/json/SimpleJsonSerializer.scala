@@ -1,12 +1,12 @@
 package authentikat.json
 
-import java.util.{TimeZone, Date}
+import java.util.{ TimeZone, Date }
 import java.text.SimpleDateFormat
 
 object SimpleJsonSerializer {
 
   /**
-   * Simple flat json StringBuilder based serializer. Shouldn't be passed
+   * Simple flat json StringBuilder based serializer. Can be used w/o Json4s.
    * @param fields key value pairs
    * @return json string
    */
