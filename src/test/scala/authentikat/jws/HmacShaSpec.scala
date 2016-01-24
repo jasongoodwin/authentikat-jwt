@@ -1,28 +1,103 @@
 package authentikat.jws
 
-import authentikat.jws.JwsAlgorithm.HS256
+import authentikat.jws.JwsAlgorithm._
 import org.scalatest.{ FunSpec, Matchers }
 
 class HmacShaSpec extends FunSpec with Matchers {
 
   describe("HmacShaSigner") {
-    it("Should produce data for HMAC SHA 256") {
-      val signer = new HmacShaSigner("secretKey", HS256)
-      val signature = HexToString(signer("someData"))
-      signature should equal(HexToString(Array[Byte](34, 43, -124, 2, 46, -78, 28, 3, 6, -75, 107, 20, -84, -34, -27, -90, 35, 35, 20, -89, 37, 106, 27, 94, 25, 78, -25, 96, -74, -2, 98, -96)))
+
+    describe("HMAC SHA 256") {
+      it("Should produce signature") {
+        val signer = new HmacShaSigner("secretKey", HS256)
+        val signature = HexToString(signer("someData"))
+        signature.length should equal(64)
+        signature should equal(HexToString(Array[Byte](34, 43, -124, 2, 46, -78, 28, 3, 6, -75, 107, 20, -84, -34, -27, -90, 35, 35, 20, -89, 37, 106, 27, 94, 25, 78, -25, 96, -74, -2, 98, -96)))
+      }
+    }
+
+    describe("HMAC SHA 384") {
+      it("Should produce signature") {
+        val signer = new HmacShaSigner("secretKey", HS384)
+        val signature = HexToString(signer("someData"))
+        signature.size should equal(96)
+      }
+    }
+
+    describe("HMAC SHA 512") {
+      it("Should produce signature") {
+        val signer = new HmacShaSigner("secretKey", HS512)
+        val signature = HexToString(signer("someData"))
+        signature.size should equal(128)
+      }
     }
   }
 
-  describe("HmacShaValidator") {
-    it("Should validate for HMAC SHA 256") {
-      import HexToString._
+  describe("HmacShaVerifier") {
+    describe("HMAC SHA 256") {
+      it("Should verify valid signature") {
+        import HexToString._
 
-      val signer = new HmacShaSigner("secretKey", HS256)
-      val signature = signer("someData")
+        val signer = new HmacShaSigner("secretKey", HS256)
+        val signature = signer("someData")
 
-      val validator = new HmacShaVerifier("secretKey", HS256)
-      validator("someData", signature) should equal(true)
+        val verifier = new HmacShaVerifier("secretKey", HS256)
+        verifier("someData", signature) should equal(true)
+      }
+
+      it("Should not verify invalid signature") {
+        import HexToString._
+
+        val signer = new HmacShaSigner("secretKey", HS256)
+        val signature = signer("someData")
+
+        val verifier = new HmacShaVerifier("badSecretKey", HS256)
+        verifier("someData", signature) should equal(false)
+      }
+    }
+
+    describe("HMAC SHA 384") {
+      it("Should verify valid signature") {
+        import HexToString._
+
+        val signer = new HmacShaSigner("secretKey", HS384)
+        val signature = signer("someData")
+
+        val verifier = new HmacShaVerifier("secretKey", HS384)
+        verifier("someData", signature) should equal(true)
+      }
+
+      it("Should not verify invalid signature") {
+        import HexToString._
+
+        val signer = new HmacShaSigner("secretKey", HS384)
+        val signature = signer("someData")
+
+        val verifier = new HmacShaVerifier("badSecretKey", HS384)
+        verifier("someData", signature) should equal(false)
+      }
+    }
+
+    describe("HMAC SHA 512") {
+      it("Should verify valid signature") {
+        import HexToString._
+
+        val signer = new HmacShaSigner("secretKey", HS512)
+        val signature = signer("someData")
+
+        val verifier = new HmacShaVerifier("secretKey", HS512)
+        verifier("someData", signature) should equal(true)
+      }
+
+      it("Should not verify invalid signature") {
+        import HexToString._
+
+        val signer = new HmacShaSigner("secretKey", HS512)
+        val signature = signer("someData")
+
+        val verifier = new HmacShaVerifier("badSecretKey", HS512)
+        verifier("someData", signature) should equal(false)
+      }
     }
   }
-
 }

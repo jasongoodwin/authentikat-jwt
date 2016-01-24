@@ -51,35 +51,47 @@ class RsaShaSpec extends FunSpec with Matchers {
     }
   }
 
-  describe("RsaShaValidator") {
+  describe("RsaShaVerifier") {
 
     describe("RS256") {
-      it("Should validate signature using private Key") {
+      it("Should verify valid signature using private Key") {
         val signer = new RsaShaSigner(privateKey, RS256)
         val signature = Base64.encodeBase64(signer("someData"))
 
-        val validator = new RsaShaVerifier(publicKey, RS256)
-        validator("someData", new String(signature)) should equal(true)
+        val verifier = new RsaShaVerifier(publicKey, RS256)
+        verifier("someData", new String(signature)) should equal(true)
+      }
+
+      it("Should not verify invalid signature using private Key") {
+        fail("not tested...")
       }
     }
 
     describe("RS384") {
-      it("Should validate signature using private Key") {
+      it("Should verify valid signature using private Key") {
         val signer = new RsaShaSigner(privateKey, RS384)
         val signature = Base64.encodeBase64(signer("someData"))
 
-        val validator = new RsaShaVerifier(publicKey, RS384)
-        validator("someData", new String(signature)) should equal(true)
+        val verifier = new RsaShaVerifier(publicKey, RS384)
+        verifier("someData", new String(signature)) should equal(true)
+      }
+
+      it("Should not verify invalid signature using private Key") {
+        fail("not tested...")
       }
     }
 
     describe("RS512") {
-      it("Should validate signature using private Key") {
+      it("Should verify valid signature using private Key") {
         val signer = new RsaShaSigner(privateKey, RS512)
         val signature = Base64.encodeBase64(signer("someData"))
 
-        val validator = new RsaShaVerifier(publicKey, RS512)
-        validator("someData", new String(signature)) should equal(true)
+        val verifier = new RsaShaVerifier(publicKey, RS512)
+        verifier("someData", new String(signature)) should equal(true)
+      }
+
+      it("Should not verify invalid signature using private Key") {
+        fail("not tested...")
       }
     }
   }
