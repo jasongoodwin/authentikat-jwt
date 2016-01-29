@@ -62,10 +62,23 @@ The header contains info needed to understand the content of the key.
 - cty: It can also contain a content type ("cty") field, This field, if used, could indicate that the content is another token. (This feature is not currently supported.)
 
 Currently supported encryption algorithms:
-- "none" gives a blank signature. It could be used for passing data around in a small space such as a header.
+
+HMAC SHA: Uses a shared key for signing and verifying.
 - "HS256"
 - "HS384"
 - "HS512"
+
+RSA SHA: uses a separate private and public key pair for signing and verifying.
+- "RS256"
+- "RS384"
+- "RS512"
+
+(TODO - needs to be implemented)
+- "ES256"
+- "ES384"
+- "ES512"
+
+- "\`None\`" gives a blank signature. It could be used for passing data around in a small space such as a header.
 
 JwtClaimsSet
 ------------
@@ -146,6 +159,7 @@ That will return your token - you can use it now!
 Validating a Token
 ------------------
 
+//TODO not valid in 1.0.0
 Validating a token is easy - you just pass it in to a method with the key:
 Note you validate the entire token - don't make the mistake of passing in the encrypted claims only.
 

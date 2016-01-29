@@ -6,7 +6,7 @@ scalaVersion := "2.11.7"
 
 crossScalaVersions := Seq("2.10.4", "2.11.7") //sbt '+ publish'
 
-parallelExecution := false
+parallelExecution := true
 
 scalacOptions ++= Seq("-unchecked", "-deprecation")
 
@@ -14,8 +14,13 @@ libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.9",
   "org.json4s" %% "json4s-native" % "3.3.0",
   "org.json4s" %% "json4s-jackson" % "3.3.0",
+  "org.bouncycastle" % "bcprov-jdk16" % "1.46"
+)
+
+libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.5" % Test
 )
+
 
 resolvers ++= Seq(
   "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
