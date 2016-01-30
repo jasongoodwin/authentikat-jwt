@@ -10,6 +10,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
+ * Logic used in test to read keys from disk.
  * Helper logic nabbed from stack (thanks!)
  * http://stackoverflow.com/questions/11410770/load-rsa-public-key-from-file
  */

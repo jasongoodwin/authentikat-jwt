@@ -14,7 +14,7 @@ libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.9",
   "org.json4s" %% "json4s-native" % "3.3.0",
   "org.json4s" %% "json4s-jackson" % "3.3.0",
-  "org.bouncycastle" % "bcprov-jdk16" % "1.46"
+  "org.bouncycastle" % "bcprov-jdk15on" % "1.54" //required for RSASSA-PSS
 )
 
 libraryDependencies ++= Seq(
