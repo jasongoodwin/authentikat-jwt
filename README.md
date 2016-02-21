@@ -12,8 +12,8 @@ JWT - pronounced 'jot' - is a claims-based authentication standard.
 ======================
 
 Currently 1.0.0-M1 is in central which has experimental changes:
-- All encryption algorithms supported (RSA, PS, ES, HS)
-- Seperate verifier and signer to allow eg public and private keys depending on hashing algorithm
+- All signing algorithms supported (RSA, PS, ES, HS)
+- Seperate verifier and signer to allow eg public and private keys depending on signing algorithm
 - Because the verifier must be explicitly passed, the API is inherently safer in ensuring the token is signed with the expected algorithm.
 
 When released, the API will contain additional methods to aid in validating different areas of the tokens.
