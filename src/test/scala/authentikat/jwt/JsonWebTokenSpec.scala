@@ -14,29 +14,30 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
   describe("JsonWebToken") {
     val header = JwtHeader("HS256")
     val claims = JwtClaimsSetMap(Map("Hey" -> "foo"))
-    val jvalueClaims = render("Hey" -> ("Hey" -> "foo") )
+    val jvalueClaims = render("Hey" -> ("Hey" -> "foo"))
+    val secretKey = Array[Byte](115, 101, 99, 114, 101, 116, 107, 101, 121)
 
     it("should have three parts for a token created with claims map claims") {
-      val result = JsonWebToken.apply(header, claims, "secretkey")
+      val result = JsonWebToken.apply(header, claims, secretKey)
       result.split("\\.").length should equal(3)
     }
 
     it("should have three parts for a token created with a jvalue claims") {
-      val result = JsonWebToken.apply(header, JwtClaimsSetJValue(jvalueClaims), "secretkey")
+      val result = JsonWebToken.apply(header, JwtClaimsSetJValue(jvalueClaims), secretKey)
       result.split("\\.").length should equal(3)
     }
 
     it("should have three parts for a token created with a string claims") {
-      val result = JsonWebToken.apply(header, JwtClaimsSetJValue("{\"json\":42}"), "secretkey")
+      val result = JsonWebToken.apply(header, JwtClaimsSetJValue("{\"json\":42}"), secretKey)
       result.split("\\.").length should equal(3)
     }
 
     it("should produce the same results for all three claims types") {
       val expectedResult = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8"
 
-      val res1 = JsonWebToken.apply(header, JwtClaimsSetMap(Map("Hey" -> "foo")), "secretkey")
-      val res2 = JsonWebToken.apply(header, JwtClaimsSetJValue(("Hey" -> "foo")), "secretkey")
-      val res3 = JsonWebToken.apply(header, JwtClaimsSetJsonString("{\"Hey\":\"foo\"}"), "secretkey")
+      val res1 = JsonWebToken.apply(header, JwtClaimsSetMap(Map("Hey" -> "foo")), secretKey)
+      val res2 = JsonWebToken.apply(header, JwtClaimsSetJValue(("Hey" -> "foo")), secretKey)
+      val res3 = JsonWebToken.apply(header, JwtClaimsSetJsonString("{\"Hey\":\"foo\"}"), secretKey)
 
       res1 should equal(expectedResult)
       res2 should equal(expectedResult)
@@ -44,7 +45,7 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
     }
 
     it("should be extracted by extractor") {
-      val jwt = JsonWebToken.apply(header, claims, "secretkey")
+      val jwt = JsonWebToken.apply(header, claims, secretKey)
       val result = jwt match {
         case JsonWebToken(x, y, z) =>
           true
@@ -56,7 +57,7 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
 
     it("extracted claims set should be jvalue") {
 
-      val jwt = JsonWebToken.apply(header, claims, "secretkey")
+      val jwt = JsonWebToken.apply(header, claims, secretKey)
       val result = jwt match {
         case JsonWebToken(x, y, z) =>
           Some(y)
@@ -68,21 +69,21 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
     }
 
     it("should validate a token successfully if same key is used") {
-      val jwt = JsonWebToken.apply(header, claims, "secretkey")
-      JsonWebToken.validate(jwt, "secretkey") should equal(true)
+      val jwt = JsonWebToken.apply(header, claims, secretKey)
+      JsonWebToken.validate(jwt, secretKey) should equal(true)
     }
 
     it("should fail to validate a token if different key is used") {
-      val jwt = JsonWebToken.apply(header, claims, "secretkey")
-      JsonWebToken.validate(jwt, "here be dragons") should equal(false)
+      val jwt = JsonWebToken.apply(header, claims, secretKey)
+      JsonWebToken.validate(jwt, "here be dragons".getBytes) should equal(false)
     }
 
     it("should report validation failure and not crash if the token is incorrectly formatted") {
-      JsonWebToken.validate("", "secretkey") should equal(false)
+      JsonWebToken.validate("", secretKey) should equal(false)
     }
 
     it("should report a validation failure and not crash if the token components are incorrectly formatted") {
-      JsonWebToken.validate("..", "secretkey") should equal(false)
+      JsonWebToken.validate("..", secretKey) should equal(false)
     }
   }
 
