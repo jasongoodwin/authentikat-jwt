@@ -12,8 +12,8 @@ scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.9",
-  "org.json4s" %% "json4s-native" % "3.3.0",
-  "org.json4s" %% "json4s-jackson" % "3.3.0",
+  "org.json4s" %% "json4s-native" % "3.4.0",
+  "org.json4s" %% "json4s-jackson" % "3.4.0",
   "org.scalatest" %% "scalatest" % "2.2.5" % Test
 )
 
