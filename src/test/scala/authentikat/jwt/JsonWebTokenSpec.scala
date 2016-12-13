@@ -1,7 +1,6 @@
 package authentikat.jwt
 
 import org.scalatest.FunSpec
-import org.scalatest.matchers.ShouldMatchers
 import java.util.{Date, TimeZone}
 import java.text.SimpleDateFormat
 import org.scalatest.Matchers

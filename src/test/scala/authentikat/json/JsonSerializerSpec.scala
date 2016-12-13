@@ -1,7 +1,6 @@
 package authentikat.json
 
 import org.scalatest.FunSpec
-import org.scalatest.matchers.ShouldMatchers
 import java.text.SimpleDateFormat
 import org.scalatest.Matchers
 

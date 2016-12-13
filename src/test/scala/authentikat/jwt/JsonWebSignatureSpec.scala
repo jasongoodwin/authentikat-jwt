@@ -2,7 +2,6 @@ package authentikat.jwt
 
 import JsonWebSignature._
 import org.scalatest.FunSpec
-import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.Matchers
 
 class JsonWebSignatureSpec extends FunSpec with Matchers {
