@@ -1,14 +1,14 @@
 package authentikat.jwt
 
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
-import org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString
-import org.apache.commons.codec.binary.Base64.decodeBase64
-import util.control.Exception.allCatch
+import com.fasterxml.jackson.core.{ JsonFactory, JsonParser }
+import org.apache.commons.codec.binary.Base64.{ decodeBase64, encodeBase64URLSafeString }
+//import org.json4s._
+import org.json4s.jackson.JsonMethods
 
-object JsonWebToken {
-  import JsonWebSignature.HexToString._
+import scala.util.control.Exception.allCatch
 
+object JsonWebToken extends JsonMethods {
+  mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true)
   /**
    * Produces a JWT.
    * @param header
@@ -24,7 +24,7 @@ object JsonWebToken {
     val signingInput = encodedHeader + "." + encodedClaims
 
     val encodedSignature: String = encodeBase64URLSafeString(
-        JsonWebSignature(header.algorithm.getOrElse("none"), signingInput, key))
+      JsonWebSignature(header.algorithm.getOrElse("none"), signingInput, key))
 
     signingInput + "." + encodedSignature
   }
@@ -37,7 +37,7 @@ object JsonWebToken {
 
   def unapply(jwt: String): Option[(JwtHeader, JwtClaimsSetJValue, String)] = {
     jwt.split("\\.") match {
-      case Array(providedHeader, providedClaims, providedSignature) =>
+      case Array(providedHeader, providedClaims, providedSignature) ⇒
         import org.json4s.DefaultFormats
         implicit val formats = DefaultFormats
 
@@ -47,7 +47,7 @@ object JsonWebToken {
           parse(new String(decodeBase64(providedClaims), "UTF-8"))
         }
 
-        if(header.isEmpty || optClaimsSet.isEmpty)
+        if (header.isEmpty || optClaimsSet.isEmpty)
           None
         else {
           val claimsSet = JwtClaimsSetJValue(optClaimsSet.get)
@@ -56,7 +56,7 @@ object JsonWebToken {
 
           Some(header.get, claimsSet, signature)
         }
-      case _ =>
+      case _ ⇒
         None
     }
   }
@@ -76,7 +76,7 @@ object JsonWebToken {
     implicit val formats = DefaultFormats
 
     jwt.split("\\.") match {
-      case Array(providedHeader, providedClaims, providedSignature) =>
+      case Array(providedHeader, providedClaims, providedSignature) ⇒
 
         val headerJsonString = new String(decodeBase64(providedHeader), "UTF-8")
         val header = JwtHeader.fromJsonStringOpt(headerJsonString).getOrElse(JwtHeader(None, None, None))
@@ -85,7 +85,7 @@ object JsonWebToken {
           JsonWebSignature(header.algorithm.getOrElse("none"), providedHeader + "." + providedClaims, key))
 
         providedSignature.contentEquals(signature)
-      case _ =>
+      case _ ⇒
         false
     }
   }
