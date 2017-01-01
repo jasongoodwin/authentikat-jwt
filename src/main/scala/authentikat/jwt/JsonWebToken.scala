@@ -9,6 +9,9 @@ import util.control.Exception.allCatch
 object JsonWebToken {
   import JsonWebSignature.HexToString._
 
+  @deprecated(message = "please specify the key as a byte array", since = "0.4.3")
+  def apply(header: JwtHeader, claims: JwtClaimsSet, key: String): String = apply(header, claims, key.getBytes)
+
   /**
    * Produces a JWT.
    * @param header
@@ -16,8 +19,7 @@ object JsonWebToken {
    * @param key
    * @return
    */
-
-  def apply(header: JwtHeader, claims: JwtClaimsSet, key: String): String = {
+  def apply(header: JwtHeader, claims: JwtClaimsSet, key: Array[Byte]): String = {
     val encodedHeader = encodeBase64URLSafeString(header.asJsonString.getBytes("UTF-8"))
     val encodedClaims = encodeBase64URLSafeString(claims.asJsonString.getBytes("UTF-8"))
 
@@ -61,6 +63,10 @@ object JsonWebToken {
     }
   }
 
+
+  @deprecated(message = "please specify the key as a byte array", since = "0.4.3")
+  def validate(jwt: String, key: String): Boolean = validate(jwt, key.getBytes)
+
   /**
    * Validate a JWT claims set against a secret key.
    * Validates an un-parsed jwt as parsing it before validating it is probably un-necessary.
@@ -69,8 +75,7 @@ object JsonWebToken {
    * @param key
    * @return
    */
-
-  def validate(jwt: String, key: String): Boolean = {
+  def validate(jwt: String, key: Array[Byte]): Boolean = {
 
     import org.json4s.DefaultFormats
     implicit val formats = DefaultFormats
@@ -91,4 +96,3 @@ object JsonWebToken {
   }
 
 }
-

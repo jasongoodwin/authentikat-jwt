@@ -19,7 +19,10 @@ object JsonWebSignature {
     }
   }
 
-  def apply(algorithm: String, data: String, key: String): Array[Byte] = {
+  @deprecated(message = "please specify the key as a byte array", since = "0.4.3")
+  def apply(algorithm: String, data: String, key: String): Array[Byte] = apply(algorithm, data, key.getBytes)
+
+  def apply(algorithm: String, data: String, key: Array[Byte]): Array[Byte] = {
     algorithm match {
       case "HS256" => apply(HS256, data, key)
       case "HS384" => apply(HS384, data, key)
@@ -29,7 +32,10 @@ object JsonWebSignature {
     }
   }
 
-  def apply(algorithm: Algorithm, data: String, key: String = null): Array[Byte] = {
+  @deprecated(message = "please specify the key as a byte array", since = "0.4.3")
+  def apply(algorithm: Algorithm, data: String, key: String): Array[Byte] = apply(algorithm, data, key.getBytes)
+
+  def apply(algorithm: Algorithm, data: String, key: Array[Byte] = null): Array[Byte] = {
     algorithm match {
       case HS256 => HmacSha("HmacSHA256", data, key)
       case HS384 => HmacSha("HmacSHA384", data, key)
@@ -40,11 +46,11 @@ object JsonWebSignature {
   }
 
   private case object HmacSha {
-    def apply(algorithm: String, data: String, key: String): Array[Byte] = {
+    def apply(algorithm: String, data: String, key: Array[Byte]): Array[Byte] = {
 
       val _key = Option(key).getOrElse(throw new IllegalArgumentException("Missing key for JWT encryption via " + algorithm))
       val mac: Mac = Mac.getInstance(algorithm)
-      val secretKey: SecretKeySpec = new SecretKeySpec(_key.getBytes, algorithm)
+      val secretKey: SecretKeySpec = new SecretKeySpec(_key, algorithm)
       mac.init(secretKey)
       mac.doFinal(data.getBytes)
     }
@@ -71,4 +77,3 @@ object JsonWebSignature {
   //  private case object PS384 extends UnimplementedAlgorithm
   //  private case object PS512 extends UnimplementedAlgorithm
 }
-
