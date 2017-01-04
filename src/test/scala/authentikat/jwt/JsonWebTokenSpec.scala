@@ -1,7 +1,7 @@
 package authentikat.jwt
 
 import org.scalatest.FunSpec
-import java.util.{Date, TimeZone}
+import java.util.{ Date, TimeZone }
 import java.text.SimpleDateFormat
 import org.scalatest.Matchers
 
@@ -13,7 +13,7 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
   describe("JsonWebToken") {
     val header = JwtHeader("HS256")
     val claims = JwtClaimsSetMap(Map("Hey" -> "foo"))
-    val jvalueClaims = render("Hey" -> ("Hey" -> "foo") )
+    val jvalueClaims = render("Hey" -> ("Hey" -> "foo"))
 
     it("should have three parts for a token created with claims map claims") {
       val result = JsonWebToken.apply(header, claims, "secretkey")
@@ -45,9 +45,9 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
     it("should be extracted by extractor") {
       val jwt = JsonWebToken.apply(header, claims, "secretkey")
       val result = jwt match {
-        case JsonWebToken(x, y, z) =>
+        case JsonWebToken(x, y, z) ⇒
           true
-        case x =>
+        case x ⇒
           false
       }
       result should equal(true)
@@ -57,9 +57,9 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
 
       val jwt = JsonWebToken.apply(header, claims, "secretkey")
       val result = jwt match {
-        case JsonWebToken(x, y, z) =>
+        case JsonWebToken(x, y, z) ⇒
           Some(y)
-        case x =>
+        case x ⇒
           None
       }
 
@@ -115,5 +115,24 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
     it("should contain exp (Expiration time) claim as ISO8601 date") {
       claimsSetJsonString should include("\"exp\":\"" + dateIso8601 + "\"")
     }
+  }
+
+  describe("comments should be disabled") {
+    val header = JwtHeader("HS256")
+    val claims = "x\",\"username\":\"kevinmitnick\",\"role\":\"admin\"}\\/\\/"
+    val claimsSet = JwtClaimsSet(Map(
+      "username" -> claims,
+      "role" -> "user"))
+
+    val jwt: String = JsonWebToken(header, claimsSet, "secretkey")
+
+    val parsedClaims: Option[Map[String, String]] = jwt match {
+      case JsonWebToken(header, claimsSet, signature) ⇒
+        claimsSet.asSimpleMap.toOption
+      case _ ⇒
+        None
+    }
+
+    parsedClaims.get("role") should be("user")
   }
 }
