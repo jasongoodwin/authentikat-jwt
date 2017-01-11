@@ -17,6 +17,9 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
 
     it("should have three parts for a token created with claims map claims") {
       val result = JsonWebToken.apply(header, claims, "secretkey")
+      println(result)
+      println(result)
+      println(result)
       result.split("\\.").length should equal(3)
     }
 
@@ -88,6 +91,7 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
   describe("JwtHeader") {
     it("should render to json as per spec") {
       val header = JwtHeader("algorithm", "contentType")
+      println(header.asJsonString)
       val expectedJson = "{\"alg\":\"algorithm\",\"cty\":\"contentType\",\"typ\":\"JWT\"}"
 
       header.asJsonString should equal(expectedJson)
@@ -97,7 +101,7 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
   describe("JwtClaimsSet") {
 
     val date = new Date
-    val dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    val dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
     val dateIso8601 = dateFormat.format(date)
 
