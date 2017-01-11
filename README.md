@@ -10,7 +10,7 @@ JWT - pronounced 'jot' - is a claims-based authentication standard.
 
 0.4.5
 =====
-Please update to 0.4.5 as soon as possible.
+Please update to 0.4.5 as soon as possible. Previous versions may be vulnerable to injection in cases where user controls values in the claims. 
 
 1.0.0 Milestone Status
 ======================
