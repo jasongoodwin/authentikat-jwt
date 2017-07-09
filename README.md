@@ -41,14 +41,14 @@ JWT - A Claims Based Authentication
 
 Before we get into how to use the library, we'll explore a usage example to demonstrate how claims based authentication can be used.
 
-Let's assume we have a secret key, and the key is "secret-key".
+Let's assume we have a secret key, and the key is "secretkey".
 Let's start the usage example imagining we have an http based service or web application. We receive an http request to do something in our http server application with a header containing a JWT (pronounced "Jot")
 We need to validate the request is authenticated by analyzing the JWT. First, let's look at the structure of a JWT.
 
 A token consists of 3 dot separated values. The token our server receives:
 
-    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ==.e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
-    ^JwtHeader                           ^JwtClaimsSet        ^JsonWebSignature - One way hash of the JwtHeader and JwtClaimsSet
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8
+    ^JwtHeader                           ^JwtClaimsSet      ^JsonWebSignature - One way hash of the JwtHeader and JwtClaimsSet
 
 The JwtHeader and JwtClaimsSet are Base64Encoded Json - they can be decoded and used. The signiture is used to validate the claims were created by someone with the secret key and to ensure they have not been modified since issuing.
 
@@ -83,7 +83,7 @@ JwtClaimsSet
 ------------
 
     ClaimsSet:
-    {"Hey":"foo"} + Base64Encoding = eyJIZXkiOiJmb28ifQ==
+    {"Hey":"foo"} + Base64Encoding = eyJIZXkiOiJmb28ifQ
 
 The second part of the token is the claims.
 Jwt is claims based authentication. See: http://en.wikipedia.org/wiki/Claims-based_identity
@@ -98,11 +98,11 @@ Private claims can be anything (but obviously should not duplicate keys in the p
 Signature
 ---------
 
-    {"Hey":"foo"} + Base64Encoding + HmacSha256 = e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
+    {"Hey":"foo"} + Base64Encoding + HmacSha256 = fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8
 
 The third portion of the token is a one way hash of the Base64 encoded claims set.
-In the example, it's a hash using a secret key "secretkey" of the string "eyJIZXkiOiJmb28ifQ==" using Hmac SHA256.
-The result is Hex String encoded for a value of: e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
+In the example, it's a hash using a secret key "secretkey" of the string "eyJIZXkiOiJmb28ifQ" using Hmac SHA256.
+The result is a value of: fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8
 
 JWT Use Cases
 -------------
@@ -153,7 +153,7 @@ Once you have a JwtClaimsSet and JwtHeader, you can make a new token with your s
 
 That will return your token - you can use it now!
 
-    jwt: String = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ==.e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
+    jwt: String = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8
 
 Validating a Token
 ------------------
