@@ -215,7 +215,7 @@ Or create a test with a known correct JWT :)
 Licensing
 =========
 
-See attached LICENSE file. Apache2 licenced.
+See attached [LICENSE](LICENSE) file. Apache2 licenced.
 
 Contributors
 ============
