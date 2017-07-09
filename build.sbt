@@ -2,9 +2,9 @@ name := "authentikat-jwt"
 
 organization := "com.jason-goodwin"
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.2"
 
-crossScalaVersions := Seq("2.10.4", "2.11.7", "2.12.1") //sbt '+ publish'
+crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.2") //sbt '+ publish'
 
 parallelExecution := false
 
