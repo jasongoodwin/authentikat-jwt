@@ -3,7 +3,7 @@ package authentikat.jwt
 import java.text.SimpleDateFormat
 import java.util.{ Date, TimeZone }
 
-import authentikat.jws.JwsSigner
+import authentikat.jws._
 import org.scalatest.{ FunSpec, Matchers }
 
 class FakeSigner extends JwsSigner {
@@ -21,6 +21,22 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
     val header = JwtHeader("HS256")
     val claims = JwtClaimsSetMap(Map("Hey" -> "foo"))
     val jvalueClaims = render("Hey" -> ("Hey" -> "foo"))
+
+    it("should generate a valid token for HS256") {
+      val expected = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.HSOMhkNEpEHSfr4a7lf96ulFHInPVeM_bHyLvfLI8ck"
+
+      val key = "key"
+      val jwt = JsonWebToken(JwtHeader("HS256"), claims, new HmacShaSigner(key, HS256))
+      jwt.shouldEqual(expected)
+    }
+
+    it("should generate a valid token for RS256") {
+      val expected = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.K0LT_pK2IeQzmMUp2UtOg2lSS9B2RxnRkw6h-hckCIw5Nfuo89GcnR1VDpKjC9n8rU5oOTDmIgDnJWz7x_NkSUcNGIC6joBgtL9l23klNx6gy_EKseWC163QR8Mdrff4yH9wrcoBUo0MiVRZ1TGWHIiZSbKLtgrhOu1VJvVeN-BFx_Hv2siHUFxabrWg5z6vawZXNgPOkLkKPPFcFZgepsjgurX7ngJ9TEStp0LQ2NSN5orY0fHhMoPBJPmD4sEnMsKhhZ22HS0TlkJQ2lITEuZ5mnHsOagxVDZRMJR7z1yvwhaP_4O9BE6LUO5Bz3qh3Vf1K4rtBh-Z_UdCkVYT5w"
+
+      val privateKey = KeyReader.getPrivate("src/test/resources/private_key.der")
+      val jwt = JsonWebToken(JwtHeader("RS256"), claims, new RsaShaSigner(privateKey, RS256))
+      jwt.shouldEqual(expected)
+    }
 
     describe("when a signer is provided") {
       it("should have three parts for a token created with claims map claims") {

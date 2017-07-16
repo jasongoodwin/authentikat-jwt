@@ -6,7 +6,7 @@ import org.scalatest.{ FunSpec, Matchers }
 class RsaShaSpec extends FunSpec with Matchers {
 
   val publicKey = KeyReader.getPublic("src/test/resources/public_key.der")
-  val privateKey = KeyReader.getPrivate("src/test/resources/private.der")
+  val privateKey = KeyReader.getPrivate("src/test/resources/private_key.der")
 
   val wrongPublicKey = KeyReader.getPublic("src/test/resources/bad_public_key.der")
   val wrongPrivateKey = KeyReader.getPrivate("src/test/resources/bad_private_key.der")
