@@ -84,7 +84,7 @@ object JsonWebToken extends JsonMethods {
         val signature = encodeBase64URLSafeString(
           JsonWebSignature(header.algorithm.getOrElse("none"), providedHeader + "." + providedClaims, key))
 
-        providedSignature.contentEquals(signature)
+        java.security.MessageDigest.isEqual(providedSignature.getBytes(), signature.getBytes())
       case _ ⇒
         false
     }
