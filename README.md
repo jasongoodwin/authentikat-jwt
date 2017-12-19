@@ -1,9 +1,10 @@
 authentikat-jwt - Claims Based JWT Implementation for Scala
 ===========================================================
 
+![Build Status](https://travis-ci.org/jasongoodwin/authentikat-jwt.svg?branch=master)
+![Current Version](https://img.shields.io/badge/version-0.4.5-brightgreen.svg?style=flat "0.4.5")
+[![Apache 2.0 License](https://img.shields.io/badge/license-Apache%202-blue.svg)](LICENSE)
 [![Join the chat at https://gitter.im/jasongoodwin/authentikat-jwt](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jasongoodwin/authentikat-jwt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-![travis-icon](https://travis-ci.org/jasongoodwin/authentikat-jwt.svg?branch=master)
 
 A simple scala-jwt library.
 JWT - pronounced 'jot' - is a claims-based authentication standard. 
@@ -17,7 +18,7 @@ Please update to 0.4.5 as soon as possible. Previous versions may be vulnerable 
 
 Currently 1.0.0-M1 is in central which has experimental changes:
 - All signing algorithms supported (RSA, PS, ES, HS)
-- Seperate verifier and signer to allow eg public and private keys depending on signing algorithm
+- Separate verifier and signer to allow eg public and private keys depending on signing algorithm
 - Because the verifier must be explicitly passed, the API is inherently safer in ensuring the token is signed with the expected algorithm.
 
 When released, the API will contain additional methods to aid in validating different areas of the tokens.
@@ -41,16 +42,16 @@ JWT - A Claims Based Authentication
 
 Before we get into how to use the library, we'll explore a usage example to demonstrate how claims based authentication can be used.
 
-Let's assume we have a secret key, and the key is "secret-key".
+Let's assume we have a secret key, and the key is "secretkey".
 Let's start the usage example imagining we have an http based service or web application. We receive an http request to do something in our http server application with a header containing a JWT (pronounced "Jot")
 We need to validate the request is authenticated by analyzing the JWT. First, let's look at the structure of a JWT.
 
 A token consists of 3 dot separated values. The token our server receives:
 
-    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ==.e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
-    ^JwtHeader                           ^JwtClaimsSet        ^JsonWebSignature - One way hash of the JwtHeader and JwtClaimsSet
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8
+    ^JwtHeader                           ^JwtClaimsSet      ^JsonWebSignature - One way hash of the JwtHeader and JwtClaimsSet
 
-The JwtHeader and JwtClaimsSet are Base64Encoded Json - they can be decoded and used. The signiture is used to validate the claims were created by someone with the secret key and to ensure they have not been modified since issuing.
+The JwtHeader and JwtClaimsSet are Base64Encoded Json - they can be decoded and used. The signature is used to validate the claims were created by someone with the secret key and to ensure they have not been modified since issuing.
 
 In the example above, the header and claims contain the following simple json:
 
@@ -69,7 +70,7 @@ JwtHeader
 The first part of the token is the header.
 The header contains info needed to understand the content of the key. 
 
-- alg: It contains the algorith used for the Signature - in the example case, HMAC SHA-256 .
+- alg: It contains the algorithm used for the signature - in the example case, HMAC SHA-256.
 - typ: It contains an optional typ (mimeType) field - default containing "JWT" to indicate this is a Json Web Token.
 - cty: It can also contain a content type ("cty") field, This field, if used, could indicate that the content is another token. (This feature is not currently supported.)
 
@@ -83,7 +84,7 @@ JwtClaimsSet
 ------------
 
     ClaimsSet:
-    {"Hey":"foo"} + Base64Encoding = eyJIZXkiOiJmb28ifQ==
+    {"Hey":"foo"} + Base64Encoding = eyJIZXkiOiJmb28ifQ
 
 The second part of the token is the claims.
 Jwt is claims based authentication. See: http://en.wikipedia.org/wiki/Claims-based_identity
@@ -98,17 +99,17 @@ Private claims can be anything (but obviously should not duplicate keys in the p
 Signature
 ---------
 
-    {"Hey":"foo"} + Base64Encoding + HmacSha256 = e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
+    {"Hey":"foo"} + Base64Encoding + HmacSha256 = fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8
 
 The third portion of the token is a one way hash of the Base64 encoded claims set.
-In the example, it's a hash using a secret key "secretkey" of the string "eyJIZXkiOiJmb28ifQ==" using Hmac SHA256.
-The result is Hex String encoded for a value of: e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
+In the example, it's a hash using a secret key "secretkey" of the string "eyJIZXkiOiJmb28ifQ" using HMAC SHA256.
+The result is a value of: fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8
 
 JWT Use Cases
 -------------
 
 Let's take a moment to take stock of what this gives us.
-We have a set of claims that can include any data at all including an issuer and an expiry time. Whenever your Security Token Service issues a token, it will be signed against claims. The claims on any token we recieve back can always be validated as no-one will have the secret key so any attempt to change the claims will result in a failure to validate the token.
+We have a set of claims that can include any data at all including an issuer and an expiry time. Whenever your Security Token Service issues a token, it will be signed against claims. The claims on any token we receive back can always be validated as no-one will have the secret key so any attempt to change the claims will result in a failure to validate the token.
 
 A couple quick use cases:
 If used between services behind a firewall, both the message creator and the receiver would have the secret key.
@@ -117,7 +118,7 @@ In this way, they can validate the authenticity of messages between servers.
 For a user of a web application, a token can issued by the security token service on login. That can then be used for both writing use info in the UI from the claims and also for authenticating requests for other assets.
 As an example, the claims could have username, age, timezone, etc which can be used on the client side.
 Then the user always provides the token in an "authorization" header on requests for restricted resources such as creating a post on their timeline.
-The token can be authenticated to validate the user is infact who they say they are. If used like this, the token can be used instead of, or in conjunction with, a session store.
+The token can be authenticated to validate the user is in fact who they say they are. If used like this, the token can be used instead of, or in conjunction with, a session store.
 
 The nice thing about JWT is that you use a header for the data so it gets around CORS problems seen with cookies. The token can be validated by any service that can validate the token with the secret key.
 
@@ -134,7 +135,7 @@ First, import jwt:
 
     import authentikat.jwt._
 
-There are two classes you first need to create: JwtHeader and JwtClaimsSest
+There are two classes you first need to create: JwtHeader and JwtClaimsSet
 
 The header takes an Algorithm. Eg:
 
@@ -153,7 +154,7 @@ Once you have a JwtClaimsSet and JwtHeader, you can make a new token with your s
 
 That will return your token - you can use it now!
 
-    jwt: String = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ==.e89b48f1e2016b78b805c1430d5a139e62bba9237ff3e34bad56dae6499b2647
+    jwt: String = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIZXkiOiJmb28ifQ.fTW9f2w5okSpa7u64d6laQQbpBdgoTFvIPcx5gi70R8
 
 Validating a Token
 ------------------
@@ -168,8 +169,8 @@ isValid: Boolean = true
 Parsing a Token
 ---------------
 
-Pasing a Token is also simple thanks to an extractor. You just pattern match against the jwt string.
-You will get the a JwtHeader, a JwtClaimsSetJvalue (json4s AST) and the signature.
+Parsing a Token is also simple thanks to an extractor. You just pattern match against the jwt string.
+You will get the a JwtHeader, a JwtClaimsSetJValue (json4s AST) and the signature.
 We can import some implicits to pimp out the object and give it some extra functionality.
 Here is an example that will give you back the claims in a scala.util.Try[Map[String, String]].
 (It will fail if the json tree is not flat.)
@@ -181,7 +182,7 @@ Here is an example that will give you back the claims in a scala.util.Try[Map[St
               None
     }
 
-This is the simplest way to get your data. Now you can work with at like any Option[Map[String, String].
+This is the simplest way to get your data. Now you can work with it like any Option[Map[String, String]].
 
     scala> claims.getOrElse(Map.empty[String, String]).get("Hey")
     res1: Option[String] = Some(foo)
@@ -199,10 +200,10 @@ For complex json (eg nested objects), it is possible to work with the json4s JVa
     }
 
 That will leave you with an Option[JValue]
-Now you can work with the jvalue as described in the json4s documentation here: https://github.com/json4s/json4s
+Now you can work with the JValue as described in the json4s documentation here: https://github.com/json4s/json4s
 It's similar to the native scala xml parsing.
 
-    scala> scala> (claims.get \ "Hey").values == "foo"
+    scala> (claims.get \ "Hey").values == "foo"
            res13: Boolean = true
 
 Contributing
@@ -215,7 +216,7 @@ Or create a test with a known correct JWT :)
 Licensing
 =========
 
-See attached LICENSE file. Apache2 licenced.
+See attached [LICENSE](LICENSE) file. Apache2 licenced.
 
 Contributors
 ============
