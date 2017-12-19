@@ -2,6 +2,7 @@ package authentikat.jws
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+import org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString
 
 /**
  * Hmac Sha-2 Uses shared key for both validation and signing
@@ -17,10 +18,10 @@ class HmacShaSigner(sharedKey: String, algorithm: HmacAlgorithm) extends JwsSign
   }
 
   def apply(data: String): Array[Byte] = {
-    val secretKey: SecretKeySpec = new SecretKeySpec(sharedKey.getBytes, algorithmString)
+    val secretKey: SecretKeySpec = new SecretKeySpec(sharedKey.getBytes("UTF-8"), algorithmString)
     val mac: Mac = Mac.getInstance(algorithmString)
     mac.init(secretKey)
-    mac.doFinal(data.getBytes)
+    mac.doFinal(data.getBytes("UTF-8"))
   }
 }
 
@@ -28,6 +29,6 @@ class HmacShaVerifier(sharedKey: String, algorithm: HmacAlgorithm) extends JwsVe
   val signer = new HmacShaSigner(sharedKey, algorithm)
 
   def apply(data: String, signatureData: String): Boolean = {
-    HexToString(signer(data)).equals(signatureData)
+    encodeBase64URLSafeString(signer(data)).equals(signatureData)
   }
 }

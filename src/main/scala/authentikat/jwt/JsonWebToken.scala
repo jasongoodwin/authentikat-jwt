@@ -1,6 +1,6 @@
 package authentikat.jwt
 
-import authentikat.jws.JwsSigner
+import authentikat.jws.{ JwsSigner, JwsVerifier }
 import org.apache.commons.codec.binary.Base64.{ decodeBase64, encodeBase64URLSafeString }
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -22,7 +22,7 @@ object JsonWebToken {
 
     val signingInput = encodedHeader + "." + encodedClaims
 
-    signingInput + "." + new String(signer.apply(signingInput), "UTF-8")
+    signingInput + "." + encodeBase64URLSafeString(signer.apply(signingInput))
   }
 
   /**
@@ -57,4 +57,3 @@ object JsonWebToken {
     }
   }
 }
-
