@@ -90,5 +90,30 @@ object JsonWebToken extends JsonMethods {
     }
   }
 
+  /**
+   * Validate a JWT claims set against a secret key.
+   * Note this does NOT validate exp or other validation claims - it only validates the claims against the hash.
+   * @param jwt
+   * @param header
+   * @param key
+   * @return
+   */
+
+  def validate(jwt: String, header: JwtHeader, key: String): Boolean = {
+
+    import org.json4s.DefaultFormats
+    implicit val formats = DefaultFormats
+
+    jwt.split("\\.") match {
+      case Array(providedHeader, providedClaims, providedSignature) ⇒
+
+        val signature = encodeBase64URLSafeString(
+          JsonWebSignature(header.algorithm.getOrElse("none"), providedHeader + "." + providedClaims, key))
+
+        java.security.MessageDigest.isEqual(providedSignature.getBytes(), signature.getBytes())
+      case _ ⇒
+        false
+    }
+  }
 }
 

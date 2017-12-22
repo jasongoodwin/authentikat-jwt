@@ -86,6 +86,26 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
     it("should report a validation failure and not crash if the token components are incorrectly formatted") {
       JsonWebToken.validate("..", "secretkey") should equal(false)
     }
+
+    describe("validate with header") {
+      it("should validate a token successfully if same key is used") {
+        val jwt = JsonWebToken.apply(header, claims, "secretkey")
+        JsonWebToken.validate(jwt, header, "secretkey") should equal(true)
+      }
+
+      it("should fail to validate a token if different key is used") {
+        val jwt = JsonWebToken.apply(header, claims, "secretkey")
+        JsonWebToken.validate(jwt, header, "here be dragons") should equal(false)
+      }
+
+      it("should report validation failure and not crash if the token is incorrectly formatted") {
+        JsonWebToken.validate("", header, "secretkey") should equal(false)
+      }
+
+      it("should report a validation failure and not crash if the token components are incorrectly formatted") {
+        JsonWebToken.validate("..", header, "secretkey") should equal(false)
+      }
+    }
   }
 
   describe("JwtHeader") {
