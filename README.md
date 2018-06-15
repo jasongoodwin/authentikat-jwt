@@ -1,7 +1,6 @@
 # LOOKING FOR MAINTAINER
-Sorry guys - I'm having a hard time maintaining this library right now. There are several other JWT libraries that are much more mature than this as they have been maintained and used quite rigorously. This is a security library and was my own weekend hack project to start. I never ran it - I was just curious but it picked up a fair number of users.
-I lost my pgp key and am having a hard time publishing but I work at an early phase startup that is exploding and am having a really hard time finding time to work on this right now. I'll update if I can squeeze some time into wrangling all the security flaws discovered seemingly monthly with JWT but until then, this is security we're talking about so I'd recommend you use the best supported and most widely used JWT implementation you can find!
-
+Sorry guys - I'm having a hard time maintaining this library right now. There are several other JWT libraries that are much more mature than this as they have been maintained and used quite rigorously. This is a security library and was my own weekend hack project to start. I never ran it in production - I was just mostly curious about JWT as a standard in its early days. But it picked up a fair number of users.
+I work at an early phase startup that is exploding and am having a really hard time finding time to work on this right now. I'll update if I can squeeze some time into wrangling all the security flaws discovered seemingly monthly with JWT but until then, this is security we're talking about so I'd recommend you use the best supported and most widely used JWT implementation you can find! JWT is widely criticized in the security community - I'd look at some of those opinions.
 authentikat-jwt - Claims Based JWT Implementation for Scala
 ===========================================================
 
