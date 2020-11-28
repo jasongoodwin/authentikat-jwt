@@ -21,21 +21,21 @@ object JsonWebSignature {
 
   def apply(algorithm: String, data: String, key: String): Array[Byte] = {
     algorithm match {
-      case "HS256" ⇒ apply(HS256, data, key)
-      case "HS384" ⇒ apply(HS384, data, key)
-      case "HS512" ⇒ apply(HS512, data, key)
-      case "none"  ⇒ apply(NONE, data, key)
-      case x       ⇒ throw new UnsupportedOperationException(x + " is an unknown or unimplemented JWT algo key")
+      case "HS256" => apply(HS256, data, key)
+      case "HS384" => apply(HS384, data, key)
+      case "HS512" => apply(HS512, data, key)
+      case "none"  => apply(NONE, data, key)
+      case x       => throw new UnsupportedOperationException(x + " is an unknown or unimplemented JWT algo key")
     }
   }
 
   def apply(algorithm: Algorithm, data: String, key: String = null): Array[Byte] = {
     algorithm match {
-      case HS256 ⇒ HmacSha("HmacSHA256", data, key)
-      case HS384 ⇒ HmacSha("HmacSHA384", data, key)
-      case HS512 ⇒ HmacSha("HmacSHA512", data, key)
-      case NONE  ⇒ Array.empty[Byte]
-      case x     ⇒ throw new UnsupportedOperationException(x + " is an unknown or unimplemented JWT algo key")
+      case HS256 => HmacSha("HmacSHA256", data, key)
+      case HS384 => HmacSha("HmacSHA384", data, key)
+      case HS512 => HmacSha("HmacSHA512", data, key)
+      case NONE  => Array.empty[Byte]
+      case x     => throw new UnsupportedOperationException(s"$x is an unknown or unimplemented JWT algo key")
     }
   }
 

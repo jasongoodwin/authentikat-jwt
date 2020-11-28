@@ -13,14 +13,14 @@ case class JwtHeader(
 
   def asJsonString: String = {
     val toSerialize =
-      algorithm.map(x => ("alg" -> x)).toSeq ++
-        contentType.map(x => ("cty", x)).toSeq ++
-        typ.map(x => ("typ", x)).toSeq
+      algorithm.map(x => "alg" -> x).toSeq ++
+        contentType.map(x => "cty" -> x).toSeq ++
+        typ.map(x => "typ" -> x).toSeq
 
     val map = toSerialize.toMap
 
     import org.json4s.native.Serialization.write
-    implicit val formats = org.json4s.DefaultFormats
+    implicit val formats: DefaultFormats = org.json4s.DefaultFormats
 
     write(map)
   }
@@ -30,7 +30,7 @@ object JwtHeader {
 
   import org.json4s.DefaultFormats
 
-  implicit val formats = DefaultFormats
+  implicit val formats: DefaultFormats = DefaultFormats
 
   def apply(algorithm: String, contentType: String = null, typ: String = "JWT"): JwtHeader = {
     JwtHeader(Option(algorithm), Option(contentType), Option(typ))

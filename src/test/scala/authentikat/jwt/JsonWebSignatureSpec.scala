@@ -1,10 +1,10 @@
 package authentikat.jwt
 
 import JsonWebSignature._
-import org.scalatest.FunSpec
-import org.scalatest.Matchers
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
-class JsonWebSignatureSpec extends FunSpec with Matchers {
+class JsonWebSignatureSpec extends AnyFunSpec with Matchers {
 
   describe("JsonWebSignature") {
     it("Should generate nothing for algo = none ") {
