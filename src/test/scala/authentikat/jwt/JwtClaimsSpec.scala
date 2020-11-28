@@ -1,10 +1,9 @@
 package authentikat.jwt
 
-import org.json4s.jackson.JsonMethods._
-import org.scalatest.FunSpec
-import org.scalatest.Matchers
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
-class JwtClaimsSpec extends FunSpec with Matchers {
+class JwtClaimsSpec extends AnyFunSpec with Matchers {
 
   import org.json4s.JsonDSL._
   import org.json4s.jackson.JsonMethods._

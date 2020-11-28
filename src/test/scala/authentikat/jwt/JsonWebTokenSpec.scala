@@ -1,11 +1,11 @@
 package authentikat.jwt
 
-import org.scalatest.FunSpec
-import java.util.{ Date, TimeZone }
+import java.util.{Date, TimeZone}
 import java.text.SimpleDateFormat
-import org.scalatest.Matchers
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
-class JsonWebTokenSpec extends FunSpec with Matchers {
+class JsonWebTokenSpec extends AnyFunSpec with Matchers {
 
   import org.json4s.JsonDSL._
   import org.json4s.jackson.JsonMethods._
@@ -48,10 +48,8 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
     it("should be extracted by extractor") {
       val jwt = JsonWebToken.apply(header, claims, "secretkey")
       val result = jwt match {
-        case JsonWebToken(x, y, z) ⇒
-          true
-        case x ⇒
-          false
+        case JsonWebToken(_, _, _) => true
+        case _ => false
       }
       result should equal(true)
     }
@@ -60,10 +58,8 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
 
       val jwt = JsonWebToken.apply(header, claims, "secretkey")
       val result = jwt match {
-        case JsonWebToken(x, y, z) ⇒
-          Some(y)
-        case x ⇒
-          None
+        case JsonWebToken(_, y, _) => Some(y)
+        case _ => None
       }
 
       result.get should equal(JwtClaimsSetJValue(("Hey" -> "foo")))
@@ -131,10 +127,8 @@ class JsonWebTokenSpec extends FunSpec with Matchers {
     val jwt: String = JsonWebToken(header, claimsSet, "secretkey")
 
     val parsedClaims: Option[Map[String, String]] = jwt match {
-      case JsonWebToken(header, claimsSet, signature) ⇒
-        claimsSet.asSimpleMap.toOption
-      case _ ⇒
-        None
+      case JsonWebToken(_, claimsSet, _) => claimsSet.asSimpleMap.toOption
+      case _ => None
     }
 
     parsedClaims.get("role") should be("user")

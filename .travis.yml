@@ -1,13 +1,15 @@
 language: scala
 
 scala:
-  - "2.10.6"
   - "2.11.11"
   - "2.12.2"
+  - "2.13.3"
 
 cache:
   directories:
-  - $HOME/.ivy2
+    - $HOME/.ivy2
+    - $HOME/.coursier
+    - $HOME/.sbt
 
 jdk:
-  - oraclejdk8
+  - openjdk11
