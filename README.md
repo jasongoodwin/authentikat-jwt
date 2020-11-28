@@ -14,10 +14,6 @@ authentikat-jwt - Claims Based JWT Implementation for Scala
 A simple scala-jwt library.
 JWT - pronounced 'jot' - is a claims-based authentication standard. 
 
-0.5.0
-=====
-Please update to 0.5.0 as soon as possible. Previous versions may be vulnerable to injection in cases where user controls values in the claims. 
-
 1.0.0 Milestone Status
 ======================
 
